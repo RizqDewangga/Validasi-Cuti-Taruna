@@ -23,23 +23,23 @@ class DatabaseSeeder extends Seeder
 
         // Taruna contoh
 User::create([
-    'nama_lengkap' => 'Budi Santoso',
-    'npm' => '2021001',
-    'password' => Hash::make('taruna123'),
+    'nama_lengkap' => 'Jihan Safirah',
+    'npm' => '20032005',
+    'password' => Hash::make('jihansafirah'),
     'role' => 'taruna',
-    'nama_ibu' => 'Siti Aminah',
-    'tanggal_lahir' => '2000-01-01',
+    'nama_ibu' => 'mama jihan',
+    'tanggal_lahir' => '2003-03-20',
 ]);
 
 // Orang tua tidak perlu diisi manual, akan dibuat saat login pertama
 
         // Buat orang tua contoh
         User::create([
-            'nama_lengkap' => 'Siti Aminah', // nama ibu
-            'password' => Hash::make('ortu123'),
+            'nama_lengkap' => 'mama jihan', // nama ibu
+            'password' => Hash::make('mama123'),
             'role' => 'orang_tua',
-            'nama_ibu' => 'Siti Aminah', // diisi sama dengan nama_lengkap untuk memudahkan
-            'tanggal_lahir_anak' => '2000-01-01', // contoh tanggal lahir anak (taruna)
+            'nama_ibu' => 'mama jihan', // diisi sama dengan nama_lengkap untuk memudahkan
+            'tanggal_lahir_anak' => '2003-03-20', // contoh tanggal lahir anak (taruna)
         ]);
 
         // Bisa tambahkan data lain jika perlu

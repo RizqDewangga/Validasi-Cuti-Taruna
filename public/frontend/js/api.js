@@ -1,8 +1,14 @@
-async function apiCall(endpoint, method = 'GET', body = null, token = null) {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    };
+async function apiCall(endpoint, method = 'GET', body = null, token = null, isFormData = false) {
+    let headers = {};
+
+    // Jika bukan FormData, set Content-Type JSON
+    if (!isFormData) {
+        headers['Content-Type'] = 'application/json';
+        headers['Accept'] = 'application/json';
+    } else {
+        headers['Accept'] = 'application/json';
+        // Jangan set Content-Type, biarkan browser set sendiri dengan boundary
+    }
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
@@ -14,7 +20,11 @@ async function apiCall(endpoint, method = 'GET', body = null, token = null) {
     };
 
     if (body) {
-        options.body = JSON.stringify(body);
+        if (isFormData) {
+            options.body = body; // body sudah FormData
+        } else {
+            options.body = JSON.stringify(body);
+        }
     }
 
     try {
@@ -22,13 +32,11 @@ async function apiCall(endpoint, method = 'GET', body = null, token = null) {
         const data = await response.json();
 
         if (!response.ok) {
-            // Jika endpoint adalah login/register dan 401, itu berarti kredensial salah
+            // Jika endpoint login/register dan 401, itu berarti kredensial salah
             if (response.status === 401) {
-                // Untuk endpoint login, jangan redirect, tapi lempar error dengan pesan dari server
                 if (endpoint.includes('/login/') || endpoint === '/register') {
                     throw new Error(data.message || 'Kredensial yang diberikan salah');
                 } else {
-                    // Untuk endpoint terproteksi, redirect ke login
                     localStorage.clear();
                     window.location.href = '/frontend/login.html';
                     throw new Error('Sesi habis, silakan login ulang');

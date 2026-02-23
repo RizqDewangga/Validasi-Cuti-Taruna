@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CutiApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class CutiController extends Controller
 {
@@ -47,38 +48,72 @@ class CutiController extends Controller
      * Menyimpan pengajuan cuti baru (hanya untuk taruna)
      */
     public function store(Request $request)
-    {
-        $user = $request->user();
-        if ($user->role != 'taruna') {
-            return response()->json(['status' => 'error', 'message' => 'Hanya taruna yang bisa mengajukan cuti'], 403);
+{
+    $user = $request->user();
+    if ($user->role != 'taruna') {
+        return response()->json(['status' => 'error', 'message' => 'Hanya taruna yang bisa mengajukan cuti'], 403);
+    }
+
+    $validator = Validator::make($request->all(), [
+        // Alamat cuti (komponen)
+        'alamat_cuti.jalan' => 'required|string',
+        'alamat_cuti.rt_rw' => 'required|string',
+        'alamat_cuti.kelurahan' => 'required|string',
+        'alamat_cuti.kecamatan' => 'required|string',
+        'alamat_cuti.kota' => 'required|string',
+        'alamat_cuti.provinsi' => 'required|string',
+        'tujuan' => 'required|in:orang_tua,kerabat',
+        'nama_kerabat' => 'required_if:tujuan,kerabat|string|nullable',
+        'nomor_kerabat' => 'required_if:tujuan,kerabat|string|nullable',
+        'transportasi' => 'required|string|in:kereta,pesawat,bus,travel,ojol,pribadi',
+        'tiket' => 'required_if:transportasi,kereta,pesawat,bus,travel|file|mimes:pdf,jpeg,jpg,png|max:2048|nullable', // 2MB
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    $data = [
+        'taruna_id' => $user->id,
+        'alamat_cuti' => $request->alamat_cuti,
+        'tujuan' => $request->tujuan,
+        'transportasi' => $request->transportasi,
+        'status' => 'pending',
+    ];
+
+    if ($request->tujuan === 'kerabat') {
+        $data['nama_kerabat'] = $request->nama_kerabat;
+        $data['nomor_kerabat'] = $request->nomor_kerabat;
+    }
+
+    if ($request->hasFile('tiket') && $request->file('tiket')->isValid()) {
+            $path = $request->file('tiket')->store('tiket', 'public');
+            $data['tiket_path'] = $path;
         }
 
-        $validator = Validator::make($request->all(), [
-            'alamat_tujuan' => 'required|string',
-            'alamat_dituju' => 'required|string',
-            'transportasi' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
+    // Handle file upload jika transportasi memerlukan tiket
+    $transportasiWajibTiket = ['kereta', 'pesawat', 'bus', 'travel'];
+    if (in_array($request->transportasi, $transportasiWajibTiket)) {
+        if (!$request->hasFile('tiket')) {
             return response()->json([
                 'status' => 'error',
-                'errors' => $validator->errors()
+                'message' => 'Untuk transportasi ini wajib mengunggah tiket.'
             ], 422);
         }
-
-        $cuti = CutiApplication::create([
-            'taruna_id' => $user->id,
-            'alamat_tujuan' => $request->alamat_tujuan,
-            'alamat_dituju' => $request->alamat_dituju,
-            'transportasi' => $request->transportasi,
-            'status' => 'pending',
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $cuti
-        ], 201);
+        $path = $request->file('tiket')->store('tiket', 'public');
+        $data['tiket_path'] = $path;
     }
+
+    $cuti = CutiApplication::create($data);
+
+    return response()->json([
+        'status' => 'success',
+        'data' => $cuti
+    ], 201);
+}
 
     /**
      * Menampilkan detail satu cuti

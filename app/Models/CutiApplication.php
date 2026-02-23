@@ -18,21 +18,22 @@ class CutiApplication extends Model
      * Kolom yang dapat diisi
      */
     protected $fillable = [
-        'taruna_id',
-        'alamat_tujuan',
-        'alamat_dituju',
-        'transportasi',
-        'status',
-        'approved_by_orangtua',
-        'approved_at',
-    ];
+    'taruna_id',
+    'alamat_cuti', // json
+    'tujuan',
+    'nama_kerabat',
+    'nomor_kerabat',
+    'transportasi',
+    'tiket_path',
+    'status',
+    'approved_by_orangtua',
+    'approved_at',
+];
 
-    /**
-     * Casting atribut
-     */
-    protected $casts = [
-        'approved_at' => 'datetime',
-    ];
+protected $casts = [
+    'alamat_cuti' => 'array', // otomatis decode/encode JSON
+    'approved_at' => 'datetime',
+];
 
     // Relasi ke taruna (pengguna dengan role taruna)
     public function taruna()
