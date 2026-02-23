@@ -16,12 +16,14 @@ class User extends Authenticatable
      * Kolom yang bisa diisi (mass assignable)
      */
     protected $fillable = [
-        'nama_lengkap',
-        'npm',
-        'password',
-        'role',
-        'nama_ibu',
-        'tanggal_lahir_anak',
+            'nama_lengkap',
+    'npm',
+    'password',
+    'role',
+    'nama_ibu',
+    'tanggal_lahir_anak',
+    'tanggal_lahir',
+    'child_id',
     ];
 
     /**
@@ -54,4 +56,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(CutiApplication::class, 'approved_by_orangtua');
     }
+    public function child()
+{
+    return $this->belongsTo(User::class, 'child_id');
+}
+public function parent()
+{
+    return $this->hasOne(User::class, 'child_id');
+}
 }

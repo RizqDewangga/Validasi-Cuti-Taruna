@@ -32,6 +32,16 @@
                                 <label class="form-label"><i class="fas fa-id-card me-2"></i>NPM</label>
                                 <input type="text" class="form-control" id="npm" required placeholder="Masukkan NPM">
                             </div>
+                            <!-- Field baru: Nama Ibu -->
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-female me-2"></i>Nama Ibu</label>
+                                <input type="text" class="form-control" id="nama_ibu" required placeholder="Masukkan nama ibu">
+                            </div>
+                            <!-- Field baru: Tanggal Lahir -->
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-calendar me-2"></i>Tanggal Lahir</label>
+                                <input type="date" class="form-control" id="tanggal_lahir" required>
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label"><i class="fas fa-lock me-2"></i>Password</label>
                                 <input type="password" class="form-control" id="password" required minlength="6" placeholder="Minimal 6 karakter">
@@ -70,10 +80,13 @@
                 return;
             }
 
+            // Ambil nilai dari field baru
             const body = {
                 nama_lengkap: document.getElementById('nama_lengkap').value,
                 npm: document.getElementById('npm').value,
-                password: password
+                password: password,
+                nama_ibu: document.getElementById('nama_ibu').value,
+                tanggal_lahir: document.getElementById('tanggal_lahir').value
             };
 
             try {

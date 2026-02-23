@@ -21,13 +21,17 @@ class DatabaseSeeder extends Seeder
             // npm, nama_ibu, tanggal_lahir_anak tidak diisi karena untuk admin
         ]);
 
-        // Buat taruna contoh
-        User::create([
-            'nama_lengkap' => 'Budi Santoso',
-            'npm' => '2021001',
-            'password' => Hash::make('taruna123'),
-            'role' => 'taruna',
-        ]);
+        // Taruna contoh
+User::create([
+    'nama_lengkap' => 'Budi Santoso',
+    'npm' => '2021001',
+    'password' => Hash::make('taruna123'),
+    'role' => 'taruna',
+    'nama_ibu' => 'Siti Aminah',
+    'tanggal_lahir' => '2000-01-01',
+]);
+
+// Orang tua tidak perlu diisi manual, akan dibuat saat login pertama
 
         // Buat orang tua contoh
         User::create([

@@ -17,6 +17,8 @@ class AuthController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'npm' => 'required|string|unique:users',
             'password' => 'required|string|min:6',
+            'nama_ibu' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
         ]);
 
         $user = User::create([
@@ -24,9 +26,10 @@ class AuthController extends Controller
             'npm' => $request->npm,
             'password' => Hash::make($request->password),
             'role' => 'taruna',
+            'nama_ibu' => $request->nama_ibu,
+            'tanggal_lahir' => $request->tanggal_lahir,
         ]);
 
-        // Buat token Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -69,63 +72,55 @@ class AuthController extends Controller
 
     // Login untuk orang tua
     public function loginOrangTua(Request $request)
-{
-    $request->validate([
-        'nama_ibu' => 'required|string',
-        'nama_anak' => 'required|string',
-        'tanggal_lahir_anak' => 'required|date',
-    ]);
+    {
+        $request->validate([
+            'nama_ibu' => 'required|string',
+            'nama_anak' => 'required|string',
+            'tanggal_lahir_anak' => 'required|date',
+        ]);
 
-    // Cari user orang tua
-    $orangTua = User::where('nama_lengkap', $request->nama_ibu)
-                    ->where('role', 'orang_tua')
+        // 1. Cari data Taruna (Anak) dulu untuk validasi hubungan
+        $taruna = User::where('role', 'taruna')
+                    ->where('nama_ibu', $request->nama_ibu)
+                    ->where('nama_lengkap', $request->nama_anak)
+                    ->where('tanggal_lahir', $request->tanggal_lahir_anak)
                     ->first();
 
-    if (!$orangTua) {
+        if (!$taruna) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data taruna tidak ditemukan atau data orang tua tidak cocok.'
+            ], 404);
+        }
+
+        // 2. Cari atau buat user Orang Tua berdasarkan child_id
+        // Asumsi: Anda punya kolom 'child_id' di tabel users
+        $orangTua = User::where('role', 'orang_tua')
+                        ->where('child_id', $taruna->id)
+                        ->first();
+
+        if (!$orangTua) {
+            $orangTua = User::create([
+                'nama_lengkap' => $request->nama_ibu,
+                'password' => Hash::make(uniqid()), // Password random karena login via data anak
+                'role' => 'orang_tua',
+                'nama_ibu' => $request->nama_ibu,
+                'tanggal_lahir_anak' => $request->tanggal_lahir_anak,
+                'child_id' => $taruna->id,
+            ]);
+        }
+
+        $token = $orangTua->createToken('auth_token')->plainTextToken;
+
         return response()->json([
-            'status' => 'error',
-            'message' => 'Data orang tua tidak ditemukan'
-        ], 404);
+            'status' => 'success',
+            'data' => [
+                'user' => $orangTua,
+                'token' => $token,
+                'anak' => $taruna
+            ]
+        ]);
     }
-
-    // Debug: lihat nilai yang dibandingkan
-    \Log::info('Input tanggal: ' . $request->tanggal_lahir_anak);
-    \Log::info('DB tanggal: ' . $orangTua->tanggal_lahir_anak);
-
-    // Bandingkan tanggal dengan cara yang lebih fleksibel
-    $inputDate = date('Y-m-d', strtotime($request->tanggal_lahir_anak));
-    $dbDate = date('Y-m-d', strtotime($orangTua->tanggal_lahir_anak));
-
-    if ($inputDate !== $dbDate) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Tanggal lahir anak tidak sesuai. Input: ' . $inputDate . ', DB: ' . $dbDate
-        ], 401);
-    }
-
-    // Cari taruna
-    $taruna = User::where('nama_lengkap', $request->nama_anak)
-                  ->where('role', 'taruna')
-                  ->first();
-
-    if (!$taruna) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Data taruna tidak ditemukan'
-        ], 404);
-    }
-
-    $token = $orangTua->createToken('auth_token')->plainTextToken;
-
-    return response()->json([
-        'status' => 'success',
-        'data' => [
-            'user' => $orangTua,
-            'token' => $token,
-            'anak' => $taruna
-        ]
-    ]);
-}
 
     // Login untuk admin
     public function loginAdmin(Request $request)
@@ -134,9 +129,6 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Gunakan password tetap (misal: "admin123") atau cek dari database
-        // Cara sederhana: cari user dengan role admin dan password cocok
-        // Tapi karena kita pakai hashed, kita harus cek dengan Hash::check
         $admin = User::where('role', 'admin')->first();
 
         if (!$admin || !Hash::check($request->password, $admin->password)) {
@@ -157,7 +149,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Logout (hapus token)
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -168,7 +159,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Mendapatkan data user yang sedang login
     public function user(Request $request)
     {
         return response()->json([
