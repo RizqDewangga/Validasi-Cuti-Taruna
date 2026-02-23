@@ -3,146 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Cuti Taruna - Modern</title>
+    <title>Sistem Cuti Taruna | Home</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: #ffffff;
         }
+
+        /* Animated background gradient */
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6b8cff 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating animation for vehicles */
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Slow float for different timing */
+        .float-slow {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Vehicle move horizontally */
+        .move-right {
+            animation: moveRight 20s linear infinite;
+        }
+
+        @keyframes moveRight {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(400%); }
+        }
+
+        .move-left {
+            animation: moveLeft 18s linear infinite;
+        }
+
+        @keyframes moveLeft {
+            from { transform: translateX(400%); }
+            to { transform: translateX(-100%); }
+        }
+
+        /* Card hover effect */
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px -10px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Vehicle icons container */
+        .vehicles-container {
+            position: relative;
+            height: 120px;
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        /* Wave divider */
+        .custom-shape-divider-bottom-1700000000 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+
+        .custom-shape-divider-bottom-1700000000 svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 80px;
+        }
+
+        .custom-shape-divider-bottom-1700000000 .shape-fill {
+            fill: #FFFFFF;
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Navbar -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <nav class="absolute top-0 left-0 w-full z-50 bg-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <i class="fas fa-graduation-cap text-indigo-600 text-2xl mr-2"></i>
-                    <span class="font-bold text-xl text-gray-800">CutiTaruna</span>
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <span class="text-white font-bold text-2xl tracking-tight">Cuti<span class="font-light">Taruna</span></span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="login.html" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Login</a>
-                    <a href="register.html" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition">Daftar</a>
+                    <a href="login.html" class="text-white hover:text-indigo-200 px-4 py-2 text-sm font-medium transition">Masuk</a>
+                    <a href="register.html" class="bg-white text-indigo-600 hover:bg-indigo-50 px-5 py-2 rounded-full text-sm font-semibold transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        Daftar Taruna
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="gradient-bg text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-6">Sistem Pengajuan Cuti Taruna</h1>
-                <p class="text-xl md:text-2xl mb-10 opacity-90 max-w-3xl mx-auto">Kelola cuti taruna dengan mudah, transparan, dan cepat. Orang tua dapat memantau dan menyetujui cuti anak secara real-time.</p>
-                <div class="flex justify-center space-x-4">
-                    <a href="register.html" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition">Mulai Sekarang</a>
-                    <a href="#fitur" class="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition">Pelajari Lebih Lanjut</a>
+    <!-- Hero Section with Animated Vehicles -->
+    <section class="hero-gradient relative overflow-hidden min-h-screen flex items-center">
+        <!-- Floating vehicles background -->
+        <div class="absolute inset-0 opacity-20">
+            <i class="fas fa-plane absolute top-20 left-[10%] text-white text-6xl rotate-45 float-slow"></i>
+            <i class="fas fa-train absolute top-40 right-[15%] text-white text-7xl float"></i>
+            <i class="fas fa-bus absolute bottom-32 left-[20%] text-white text-6xl float-slow" style="animation-delay: 2s;"></i>
+            <i class="fas fa-car-side absolute bottom-40 right-[25%] text-white text-5xl float" style="animation-delay: 1s;"></i>
+            <i class="fas fa-ship absolute top-60 left-[40%] text-white text-6xl float-slow" style="animation-delay: 3s;"></i>
+        </div>
+
+        <!-- Moving vehicles strip -->
+        <div class="absolute bottom-0 left-0 w-full vehicles-container">
+            <div class="flex gap-12 move-right text-white/30 text-4xl">
+                <i class="fas fa-plane"></i>
+                <i class="fas fa-train"></i>
+                <i class="fas fa-bus"></i>
+                <i class="fas fa-car"></i>
+                <i class="fas fa-ship"></i>
+                <i class="fas fa-motorcycle"></i>
+                <i class="fas fa-bicycle"></i>
+                <i class="fas fa-rocket"></i>
+                <i class="fas fa-helicopter"></i>
+                <i class="fas fa-taxi"></i>
+            </div>
+            <div class="flex gap-12 move-left text-white/30 text-4xl mt-4">
+                <i class="fas fa-truck"></i>
+                <i class="fas fa-train-subway"></i>
+                <i class="fas fa-van-shuttle"></i>
+                <i class="fas fa-sailboat"></i>
+                <i class="fas fa-cable-car"></i>
+                <i class="fas fa-tractor"></i>
+                <i class="fas fa-motorcycle"></i>
+                <i class="fas fa-caravan"></i>
+                <i class="fas fa-bus-simple"></i>
+            </div>
+        </div>
+
+        <!-- Main hero content -->
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center z-10">
+            <div data-aos="fade-down" data-aos-duration="1000">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight">
+                    Perjalanan Cuti <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-pink-300">Taruna</span> Dimulai di Sini
+                </h1>
+                <p class="text-xl md:text-2xl text-indigo-100 mb-10 max-w-3xl mx-auto">
+                    Ajukan cuti dengan mudah, pilih transportasi favoritmu, dan dapatkan persetujuan cepat dari orang tua serta pengasuh.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="register.html" class="bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-4 rounded-full text-lg font-semibold shadow-2xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i>
+                        Ajukan Cuti Sekarang
+                    </a>
+                    <a href="#fitur" class="border-2 border-white text-white hover:bg-white/20 px-8 py-4 rounded-full text-lg font-semibold transition-all flex items-center justify-center gap-2 backdrop-blur-sm">
+                        <i class="fas fa-play-circle"></i>
+                        Lihat Cara Kerja
+                    </a>
+                </div>
+            </div>
+
+            <!-- Animated taruna illustration -->
+            <div class="mt-16 relative h-64 md:h-96" data-aos="fade-up" data-aos-duration="1200">
+                <div class="absolute left-1/2 transform -translate-x-1/2 bottom-0 w-64 h-64 md:w-80 md:h-80 bg-gradient-to-t from-indigo-500 to-transparent rounded-full blur-3xl opacity-40"></div>
+                <div class="relative flex justify-center items-end h-full">
+                    <!-- Taruna with backpack -->
+                    <div class="relative float">
+                        <div class="w-40 h-40 md:w-56 md:h-56 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/30">
+                            <i class="fas fa-user-graduate text-white text-7xl md:text-8xl"></i>
+                        </div>
+                        <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-black/20 rounded-full blur-sm"></div>
+                    </div>
+                    <!-- Transport icons around taruna -->
+                    <i class="fas fa-train absolute top-0 right-0 text-white text-4xl md:text-5xl animate-bounce" style="animation-delay: 0.5s;"></i>
+                    <i class="fas fa-plane absolute top-10 left-0 text-white text-4xl md:text-5xl rotate-45 float"></i>
+                    <i class="fas fa-bus absolute bottom-20 right-10 text-white text-4xl md:text-5xl float-slow"></i>
+                    <i class="fas fa-motorcycle absolute bottom-10 left-10 text-white text-4xl md:text-5xl float" style="animation-delay: 1.5s;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wave divider -->
+        <div class="custom-shape-divider-bottom-1700000000">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Fitur Utama Section -->
+    <section id="fitur" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Kemudahan dalam Satu Aplikasi</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Dari pengajuan hingga persetujuan, semua dirancang untuk mobilitas taruna.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Fitur 1: Taruna -->
+                <div class="feature-card bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl p-8 text-center" data-aos="fade-right" data-aos-delay="200">
+                    <div class="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 transform -rotate-6 shadow-lg">
+                        <i class="fas fa-user-graduate text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Untuk Taruna</h3>
+                    <p class="text-gray-600 mb-4">
+                        Ajukan cuti kapan saja, pilih moda transportasi favoritmu: kereta, pesawat, bus, atau kendaraan pribadi.
+                    </p>
+                    <div class="flex justify-center gap-3 text-indigo-600 text-2xl">
+                        <i class="fas fa-train"></i>
+                        <i class="fas fa-plane"></i>
+                        <i class="fas fa-bus"></i>
+                        <i class="fas fa-car"></i>
+                    </div>
+                </div>
+
+                <!-- Fitur 2: Orang Tua -->
+                <div class="feature-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-24 h-24 bg-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 transform rotate-3 shadow-lg">
+                        <i class="fas fa-users text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Untuk Orang Tua</h3>
+                    <p class="text-gray-600 mb-4">
+                        Pantau perjalanan anak, berikan persetujuan cepat, dan terima notifikasi setiap pengajuan cuti.
+                    </p>
+                    <div class="flex justify-center gap-3 text-purple-600 text-2xl">
+                        <i class="fas fa-check-circle"></i>
+                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+
+                <!-- Fitur 3: Pengasuh/Admin -->
+                <div class="feature-card bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-8 text-center" data-aos="fade-left" data-aos-delay="400">
+                    <div class="w-24 h-24 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 transform -rotate-6 shadow-lg">
+                        <i class="fas fa-user-tie text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Untuk Pengasuh</h3>
+                    <p class="text-gray-600 mb-4">
+                        Kelola seluruh data cuti, lihat statistik real-time, dan pastikan semua berjalan tertib.
+                    </p>
+                    <div class="flex justify-center gap-3 text-blue-600 text-2xl">
+                        <i class="fas fa-chart-line"></i>
+                        <i class="fas fa-database"></i>
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistik cepat -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 text-center" data-aos="fade-up" data-aos-delay="500">
+                <div>
+                    <div class="text-4xl font-bold text-indigo-600">500+</div>
+                    <div class="text-gray-600">Taruna Aktif</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-indigo-600">1.200+</div>
+                    <div class="text-gray-600">Cuti Disetujui</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-indigo-600">15</div>
+                    <div class="text-gray-600">Moda Transportasi</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-indigo-600">98%</div>
+                    <div class="text-gray-600">Kepuasan</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Fitur Section -->
-    <section id="fitur" class="py-20 bg-gray-50">
+    <!-- Moda Transportasi Section -->
+    <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fitur Unggulan</h2>
-                <p class="text-xl text-gray-600">Kemudahan untuk semua pihak: taruna, orang tua, dan pengasuh</p>
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Pilih Moda Transportasimu</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Berbagai pilihan kendaraan untuk mendukung perjalanan cutimu.
+                </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Taruna Card -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl feature-card transition">
-                    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-user-graduate text-indigo-600 text-2xl"></i>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-train text-indigo-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Taruna</h3>
-                    <p class="text-gray-600 mb-4">Ajukan cuti dengan mudah, isi data tujuan dan transportasi. Pantau status pengajuan secara real-time.</p>
-                    <a href="register.html" class="text-indigo-600 font-semibold hover:text-indigo-800">Daftar sekarang →</a>
+                    <h3 class="font-semibold text-gray-800">Kereta Api</h3>
+                    <p class="text-sm text-gray-500">Cepat & Nyaman</p>
                 </div>
-                <!-- Orang Tua Card -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl feature-card transition">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-users text-green-600 text-2xl"></i>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-plane text-indigo-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Orang Tua</h3>
-                    <p class="text-gray-600 mb-4">Pantau dan setujui/tolak pengajuan cuti anak. Dapatkan notifikasi setiap ada pengajuan baru.</p>
-                    <a href="login.html" class="text-green-600 font-semibold hover:text-green-800">Login sebagai orang tua →</a>
+                    <h3 class="font-semibold text-gray-800">Pesawat</h3>
+                    <p class="text-sm text-gray-500">Antar Pulau</p>
                 </div>
-                <!-- Admin Card -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl feature-card transition">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-user-tie text-purple-600 text-2xl"></i>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bus text-indigo-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Pengasuh/Admin</h3>
-                    <p class="text-gray-600 mb-4">Kelola semua data cuti, lihat statistik, dan monitor aktivitas dengan dashboard yang informatif.</p>
-                    <a href="login.html" class="text-purple-600 font-semibold hover:text-purple-800">Login sebagai admin →</a>
+                    <h3 class="font-semibold text-gray-800">Bus</h3>
+                    <p class="text-sm text-gray-500">Ekonomis</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-car text-indigo-600 text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">Mobil Pribadi</h3>
+                    <p class="text-sm text-gray-500">Fleksibel</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-motorcycle text-indigo-600 text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">Motor</h3>
+                    <p class="text-sm text-gray-500">Lincah</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-ship text-indigo-600 text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">Kapal Laut</h3>
+                    <p class="text-sm text-gray-500">Pelayaran</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="700">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bicycle text-indigo-600 text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">Sepeda</h3>
+                    <p class="text-sm text-gray-500">Sehat & Ramah</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="800">
+                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-rocket text-indigo-600 text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">Lainnya</h3>
+                    <p class="text-sm text-gray-500">Kreatif</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimoni (Opsional) -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Apa Kata Mereka</h2>
-                <p class="text-xl text-gray-600">Testimoni dari pengguna kami</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-gray-50 p-6 rounded-2xl shadow">
-                    <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full mr-4" alt="User">
-                        <div>
-                            <h4 class="font-bold">Budi Santoso</h4>
-                            <p class="text-sm text-gray-500">Taruna</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600">"Sistem ini sangat membantu saya mengajukan cuti dengan cepat. Orang tua saya juga bisa langsung menyetujui."</p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-2xl shadow">
-                    <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full mr-4" alt="User">
-                        <div>
-                            <h4 class="font-bold">Siti Aminah</h4>
-                            <p class="text-sm text-gray-500">Orang Tua</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600">"Saya bisa memantau cuti anak dari rumah. Fitur notifikasi sangat membantu."</p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-2xl shadow">
-                    <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/men/75.jpg" class="w-12 h-12 rounded-full mr-4" alt="User">
-                        <div>
-                            <h4 class="font-bold">Drs. H. Ahmad</h4>
-                            <p class="text-sm text-gray-500">Pengasuh</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600">"Dashboard admin sangat informatif. Saya bisa melihat semua data cuti dengan mudah."</p>
-                </div>
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-r from-indigo-600 to-purple-600">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6" data-aos="fade-up">Siap Memulai Perjalanan?</h2>
+            <p class="text-xl text-indigo-100 mb-10" data-aos="fade-up" data-aos-delay="100">
+                Daftar sekarang dan nikmati kemudahan pengajuan cuti untuk taruna.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="200">
+                <a href="register.html" class="bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-4 rounded-full text-lg font-semibold shadow-2xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-user-plus"></i>
+                    Daftar Taruna
+                </a>
+                <a href="login.html" class="border-2 border-white text-white hover:bg-white/20 px-8 py-4 rounded-full text-lg font-semibold transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Masuk
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>&copy; 2026 Sistem Cuti Taruna. All rights reserved.</p>
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-graduation-cap text-indigo-400 text-2xl"></i>
+                        <span class="text-white font-bold text-xl">CutiTaruna</span>
+                    </div>
+                    <p class="text-sm">Aplikasi pengajuan cuti terintegrasi untuk taruna, orang tua, dan pengasuh.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Tautan Cepat</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-indigo-400 transition">Beranda</a></li>
+                        <li><a href="#fitur" class="hover:text-indigo-400 transition">Fitur</a></li>
+                        <li><a href="login.html" class="hover:text-indigo-400 transition">Login</a></li>
+                        <li><a href="register.html" class="hover:text-indigo-400 transition">Daftar</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Moda Transportasi</h4>
+                    <ul class="space-y-2">
+                        <li><i class="fas fa-train mr-2"></i>Kereta</li>
+                        <li><i class="fas fa-plane mr-2"></i>Pesawat</li>
+                        <li><i class="fas fa-bus mr-2"></i>Bus</li>
+                        <li><i class="fas fa-ship mr-2"></i>Kapal</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Kontak</h4>
+                    <ul class="space-y-2">
+                        <li><i class="fas fa-envelope mr-2"></i>support@cutitaruna.ac.id</li>
+                        <li><i class="fas fa-phone mr-2"></i>(021) 1234-5678</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+                &copy; 2026 Sistem Cuti Taruna. All rights reserved.
+            </div>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            duration: 1000,
+        });
+    </script>
 </body>
 </html>

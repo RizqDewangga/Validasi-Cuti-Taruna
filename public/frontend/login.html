@@ -3,148 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Modern - Sistem Cuti Taruna</title>
-    <!-- Tailwind CSS via CDN -->
+    <title>Login Premium - Sistem Cuti Taruna</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Custom styles (opsional) -->
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
         }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
         }
+
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        /* Main container */
+        .login-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Glass card effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Input fields */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .input-field:focus + .input-icon {
+            color: #667eea;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Select field */
+        .select-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-field option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .select-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom select arrow */
+        .select-arrow {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            font-size: 1rem;
+        }
+
+        /* Submit button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Role fields container */
+        .role-fields {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform-origin: top;
+        }
+
+        .role-fields.hidden {
+            display: none;
+            opacity: 0;
+            transform: scaleY(0);
+        }
+
+        /* Alert message */
+        .alert-message {
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fecaca;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #bbf7d0;
+        }
+
+        /* Floating shapes */
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -200px;
+            right: -200px;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .glass-card {
+                border-radius: 1.5rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 min-h-screen flex items-center justify-center p-4">
-    <!-- Background animated shapes -->
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-white rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: 2s;"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: 4s;"></div>
-    </div>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles" id="particles"></div>
 
-    <!-- Login Card -->
-    <div class="relative w-full max-w-md">
-        <div class="glass-effect rounded-2xl shadow-2xl p-8 space-y-6">
-            <!-- Header -->
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-white">Selamat Datang</h2>
-                <p class="text-indigo-100 mt-2">Silakan masuk ke akun Anda</p>
-            </div>
+    <!-- Floating shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
 
-            <!-- Alert -->
-            <div id="alertMessage" class="hidden bg-red-500/20 border border-red-500 text-red-100 px-4 py-3 rounded-lg text-sm" role="alert"></div>
-
-            <!-- Form -->
-            <form id="loginForm" class="space-y-5">
-                <!-- Role Selection -->
-                <div>
-                    <label class="block text-sm font-medium text-white mb-2">Pilih Role</label>
-                    <select id="role" required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
-                        <option value="" class="bg-gray-800 text-white">-- Pilih Role --</option>
-                        <option value="taruna" class="bg-gray-800 text-white">Taruna</option>
-                        <option value="orang_tua" class="bg-gray-800 text-white">Orang Tua</option>
-                        <option value="admin" class="bg-gray-800 text-white">Admin</option>
-                    </select>
+    <!-- Main container -->
+    <div class="login-container">
+        <div class="w-full max-w-md" data-aos="fade-up" data-aos-duration="1000">
+            <div class="glass-card p-8 md:p-10">
+                <!-- Header -->
+                <div class="text-center mb-8" data-aos="fade-down" data-aos-delay="200">
+                    <div class="inline-block p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-4">
+                        <i class="fas fa-graduation-cap text-white text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-2">Selamat Datang</h2>
+                    <p class="text-gray-300">Silakan masuk ke akun Anda</p>
                 </div>
 
-                <!-- Taruna Fields -->
-                <div id="tarunaFields" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium text-white mb-2">NPM</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-id-card"></i></span>
-                            <input type="text" id="npm" placeholder="Masukkan NPM" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                <!-- Alert Message -->
+                <div id="alertMessage" class="hidden"></div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="space-y-4">
+                    <!-- Role Selection -->
+                    <div class="input-group" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-user-tag input-icon"></i>
+                        <select id="role" required class="select-field">
+                            <option value="" disabled selected>Pilih Role Anda</option>
+                            <option value="taruna">Taruna</option>
+                            <option value="orang_tua">Orang Tua</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <i class="fas fa-chevron-down select-arrow"></i>
+                    </div>
+
+                    <!-- Taruna Fields -->
+                    <div id="tarunaFields" class="role-fields hidden space-y-4">
+                        <div class="input-group" data-aos="fade-up" data-aos-delay="400">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input type="text" id="npm" class="input-field" placeholder="Masukkan NPM">
+                        </div>
+                        <div class="input-group" data-aos="fade-up" data-aos-delay="500">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" class="input-field" placeholder="Password">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-white mb-2">Password</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-lock"></i></span>
-                            <input type="password" id="password" placeholder="Masukkan password" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+
+                    <!-- Orang Tua Fields -->
+                    <div id="orangTuaFields" class="role-fields hidden space-y-4">
+                        <div class="input-group" data-aos="fade-up" data-aos-delay="400">
+                            <i class="fas fa-female input-icon"></i>
+                            <input type="text" id="nama_ibu" class="input-field" placeholder="Nama Ibu">
+                        </div>
+                        <div class="input-group" data-aos="fade-up" data-aos-delay="500">
+                            <i class="fas fa-child input-icon"></i>
+                            <input type="text" id="nama_anak" class="input-field" placeholder="Nama Anak">
+                        </div>
+                        <div class="input-group" data-aos="fade-up" data-aos-delay="600">
+                            <i class="fas fa-calendar input-icon"></i>
+                            <input type="date" id="tanggal_lahir_anak" class="input-field">
                         </div>
                     </div>
+
+                    <!-- Admin Fields -->
+                    <div id="adminFields" class="role-fields hidden">
+                        <div class="input-group" data-aos="fade-up" data-aos-delay="400">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password_admin" class="input-field" placeholder="Password Admin">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="submit-btn mt-6" data-aos="fade-up" data-aos-delay="700">
+                        <span class="btn-text">Login</span>
+                        <span class="btn-spinner hidden"><span class="spinner"></span>Memproses...</span>
+                    </button>
+                </form>
+
+                <!-- Footer -->
+                <div class="mt-8 text-center" data-aos="fade-up" data-aos-delay="800">
+                    <p class="text-gray-300">
+                        Belum punya akun taruna?
+                        <a href="register.html" class="text-indigo-300 hover:text-indigo-200 font-semibold transition hover:underline">
+                            Daftar di sini
+                        </a>
+                    </p>
                 </div>
-
-                <!-- Orang Tua Fields -->
-                <div id="orangTuaFields" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium text-white mb-2">Nama Ibu</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-female"></i></span>
-                            <input type="text" id="nama_ibu" placeholder="Masukkan nama ibu" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-white mb-2">Nama Anak</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-child"></i></span>
-                            <input type="text" id="nama_anak" placeholder="Masukkan nama anak" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-white mb-2">Tanggal Lahir Anak</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-calendar"></i></span>
-                            <input type="date" id="tanggal_lahir_anak" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition [color-scheme:dark]">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Fields -->
-                <div id="adminFields" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium text-white mb-2">Password Admin</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-lock"></i></span>
-                            <input type="password" id="password_admin" placeholder="Masukkan password admin" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="w-full py-3 px-4 bg-white text-indigo-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Login
-                </button>
-            </form>
-
-            <!-- Footer -->
-            <div class="text-center text-sm text-indigo-100">
-                Belum punya akun taruna?
-                <a href="register-modern.html" class="font-semibold text-white hover:underline">Daftar di sini</a>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Toggle fields based on role
+        // Initialize AOS
+        AOS.init({
+            once: true,
+            mirror: false,
+            duration: 1000,
+        });
+
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                // Random size
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+
+                // Random animation delay
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Role field toggling with animation
         const roleSelect = document.getElementById('role');
         const tarunaFields = document.getElementById('tarunaFields');
         const orangTuaFields = document.getElementById('orangTuaFields');
         const adminFields = document.getElementById('adminFields');
 
         roleSelect.addEventListener('change', function() {
-            tarunaFields.classList.add('hidden');
-            orangTuaFields.classList.add('hidden');
-            adminFields.classList.add('hidden');
+            // Hide all fields with animation
+            [tarunaFields, orangTuaFields, adminFields].forEach(field => {
+                field.classList.add('hidden');
+            });
 
+            // Show selected fields
             if (this.value === 'taruna') {
                 tarunaFields.classList.remove('hidden');
                 setRequired('taruna');
@@ -173,7 +475,7 @@
             }
         }
 
-        // Form submission
+        // Form submission with loading state
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -182,6 +484,14 @@
                 showAlert('Pilih role terlebih dahulu!', 'error');
                 return;
             }
+
+            // Show loading
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnSpinner = submitBtn.querySelector('.btn-spinner');
+            btnText.classList.add('hidden');
+            btnSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
 
             let endpoint = '';
             let body = {};
@@ -208,30 +518,45 @@
 
             try {
                 const response = await apiCall(endpoint, 'POST', body);
+
+                // Store data
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('user', JSON.stringify(response.data.user));
                 if (response.data.anak) {
                     localStorage.setItem('anak', JSON.stringify(response.data.anak));
                 }
 
+                showAlert('Login berhasil! Mengalihkan...', 'success');
+
                 // Redirect based on role
-                if (role === 'taruna') window.location.href = 'dashboard/taruna-modern.html';
-                else if (role === 'orang_tua') window.location.href = 'dashboard/orangtua-modern.html';
-                else if (role === 'admin') window.location.href = 'dashboard/admin-modern.html';
+                setTimeout(() => {
+                    if (role === 'taruna') {
+                        window.location.href = 'dashboard/taruna.html';
+                    } else if (role === 'orang_tua') {
+                        window.location.href = 'dashboard/orangtua.html';
+                    } else if (role === 'admin') {
+                        window.location.href = 'dashboard/admin.html';
+                    }
+                }, 1500);
             } catch (error) {
                 showAlert(error.message, 'error');
+                // Reset button
+                btnText.classList.remove('hidden');
+                btnSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
             }
         });
 
         function showAlert(message, type) {
             const alert = document.getElementById('alertMessage');
             alert.textContent = message;
-            alert.classList.remove('hidden', 'bg-red-500/20', 'border-red-500', 'text-red-100', 'bg-green-500/20', 'border-green-500', 'text-green-100');
-            if (type === 'error') {
-                alert.classList.add('bg-red-500/20', 'border-red-500', 'text-red-100');
-            } else {
-                alert.classList.add('bg-green-500/20', 'border-green-500', 'text-green-100');
-            }
+            alert.className = `alert-message alert-${type}`;
+            alert.classList.remove('hidden');
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
         }
     </script>
 </body>
