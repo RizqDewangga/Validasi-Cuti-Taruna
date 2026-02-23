@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Orang Tua</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 px-0">
+                    <div class="sidebar">
+                        <div class="text-center mb-4">
+                            <img src="https://via.placeholder.com/80" class="rounded-circle mb-2" alt="Profile">
+                            <h5 id="userName" class="mb-1"></h5>
+                            <p class="text-muted">Orang Tua</p>
+                            <p><small>Anak: <span id="anakName"></span></small></p>
+                        </div>
+                        <nav class="nav flex-column">
+                            <a class="nav-link active" href="#" onclick="loadCuti()">
+                                <i class="fas fa-list"></i> Daftar Cuti Anak
+                            </a>
+                            <a class="nav-link" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 main-content">
+                    <h2 class="mb-4">Pengajuan Cuti Anak: <span id="anakNameHeader"></span></h2>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Alamat Tujuan</th>
+                                            <th>Alamat Dituju</th>
+                                            <th>Transportasi</th>
+                                            <th>Status</th>
+                                            <th>Tanggal Pengajuan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cutiList">
+                                        <!-- Data akan diisi via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Cek autentikasi
+        const auth = checkAuth('orang_tua');
+        if (!auth) throw new Error('Not authenticated');
+
+        const user = auth.user;
+        const token = auth.token;
+        const anak = JSON.parse(localStorage.getItem('anak') || '{}');
+
+        if (!anak.id) {
+            alert('Data anak tidak ditemukan!');
+            window.location.href = '../login.html';
+        }
+
+        document.getElementById('userName').textContent = user.nama_lengkap;
+        document.getElementById('anakName').textContent = anak.nama_lengkap;
+        document.getElementById('anakNameHeader').textContent = anak.nama_lengkap;
+
+        // Load cuti anak
+        async function loadCuti() {
+            try {
+                const response = await apiCall(`/cuti?taruna_id=${anak.id}`, 'GET', null, token);
+                const cutiList = response.data;
+
+                const tbody = document.getElementById('cutiList');
+                tbody.innerHTML = '';
+
+                cutiList.forEach((cuti, index) => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${cuti.alamat_tujuan}</td>
+                        <td>${cuti.alamat_dituju}</td>
+                        <td>${cuti.transportasi}</td>
+                        <td>
+                            <span class="badge ${cuti.status === 'pending' ? 'badge-pending' : cuti.status === 'disetujui' ? 'badge-approved' : 'badge-rejected'}">
+                                ${cuti.status}
+                            </span>
+                        </td>
+                        <td>${formatDate(cuti.created_at)}</td>
+                        <td>
+                            ${cuti.status === 'pending' ?
+                                `<button class="btn btn-sm btn-success me-2" onclick="approveCuti(${cuti.id})">
+                                    <i class="fas fa-check"></i> Setujui
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="rejectCuti(${cuti.id})">
+                                    <i class="fas fa-times"></i> Tolak
+                                </button>` :
+                                '-'}
+                        </td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Gagal memuat cuti:', error);
+            }
+        }
+
+        // Approve cuti
+        window.approveCuti = async function(id) {
+            try {
+                await apiCall(`/cuti/${id}/approve`, 'POST', { taruna_id: anak.id }, token);
+                alert('Cuti disetujui');
+                loadCuti();
+            } catch (error) {
+                alert('Gagal menyetujui: ' + error.message);
+            }
+        };
+
+        // Reject cuti
+        window.rejectCuti = async function(id) {
+            try {
+                await apiCall(`/cuti/${id}/reject`, 'POST', { taruna_id: anak.id }, token);
+                alert('Cuti ditolak');
+                loadCuti();
+            } catch (error) {
+                alert('Gagal menolak: ' + error.message);
+            }
+        };
+
+        // Logout
+        window.logout = logout;
+
+        // Load data saat halaman dimuat
+        loadCuti();
+    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistem Cuti Taruna</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-sign-in-alt me-2"></i>Login</h3>
+                        <p class="mb-0">Silakan pilih role dan masukkan kredensial Anda</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Alert untuk error -->
+                        <div id="alertMessage" class="alert alert-danger d-none" role="alert"></div>
+
+                        <form id="loginForm">
+                            <div class="mb-4">
+                                <label class="form-label">Pilih Role</label>
+                                <select class="form-select" id="role" required>
+                                    <option value="">-- Pilih Role --</option>
+                                    <option value="taruna">Taruna</option>
+                                    <option value="orang_tua">Orang Tua</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+
+                            <!-- Fields untuk Taruna -->
+                            <div id="tarunaFields" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-id-card me-2"></i>NPM</label>
+                                    <input type="text" class="form-control" id="npm" placeholder="Masukkan NPM">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-lock me-2"></i>Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Masukkan password">
+                                </div>
+                            </div>
+
+                            <!-- Fields untuk Orang Tua -->
+                            <div id="orangTuaFields" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-female me-2"></i>Nama Ibu</label>
+                                    <input type="text" class="form-control" id="nama_ibu" placeholder="Masukkan nama ibu">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-child me-2"></i>Nama Anak</label>
+                                    <input type="text" class="form-control" id="nama_anak" placeholder="Masukkan nama anak">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-calendar me-2"></i>Tanggal Lahir Anak</label>
+                                    <input type="date" class="form-control" id="tanggal_lahir_anak">
+                                </div>
+                            </div>
+
+                            <!-- Fields untuk Admin -->
+                            <div id="adminFields" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-lock me-2"></i>Password Admin</label>
+                                    <input type="password" class="form-control" id="password_admin" placeholder="Masukkan password admin">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </form>
+
+                        <hr class="my-4">
+                        <div class="text-center">
+                            <p class="mb-0">Belum punya akun taruna? <a href="register.html" class="text-decoration-none">Daftar di sini</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Tampilkan field sesuai role
+        document.getElementById('role').addEventListener('change', function() {
+            const role = this.value;
+            document.getElementById('tarunaFields').style.display = 'none';
+            document.getElementById('orangTuaFields').style.display = 'none';
+            document.getElementById('adminFields').style.display = 'none';
+
+            if (role === 'taruna') {
+                document.getElementById('tarunaFields').style.display = 'block';
+                document.getElementById('npm').setAttribute('required', 'required');
+                document.getElementById('password').setAttribute('required', 'required');
+                document.getElementById('nama_ibu').removeAttribute('required');
+                document.getElementById('nama_anak').removeAttribute('required');
+                document.getElementById('tanggal_lahir_anak').removeAttribute('required');
+                document.getElementById('password_admin').removeAttribute('required');
+            } else if (role === 'orang_tua') {
+                document.getElementById('orangTuaFields').style.display = 'block';
+                document.getElementById('nama_ibu').setAttribute('required', 'required');
+                document.getElementById('nama_anak').setAttribute('required', 'required');
+                document.getElementById('tanggal_lahir_anak').setAttribute('required', 'required');
+                document.getElementById('npm').removeAttribute('required');
+                document.getElementById('password').removeAttribute('required');
+                document.getElementById('password_admin').removeAttribute('required');
+            } else if (role === 'admin') {
+                document.getElementById('adminFields').style.display = 'block';
+                document.getElementById('password_admin').setAttribute('required', 'required');
+                document.getElementById('npm').removeAttribute('required');
+                document.getElementById('password').removeAttribute('required');
+                document.getElementById('nama_ibu').removeAttribute('required');
+                document.getElementById('nama_anak').removeAttribute('required');
+                document.getElementById('tanggal_lahir_anak').removeAttribute('required');
+            }
+        });
+
+        // Handle form submit
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const role = document.getElementById('role').value;
+            if (!role) {
+                showAlert('Pilih role terlebih dahulu!', 'danger');
+                return;
+            }
+
+            let endpoint = '';
+            let body = {};
+
+            if (role === 'taruna') {
+                endpoint = '/login/taruna';
+                body = {
+                    npm: document.getElementById('npm').value,
+                    password: document.getElementById('password').value
+                };
+            } else if (role === 'orang_tua') {
+                endpoint = '/login/orangtua';
+                body = {
+                    nama_ibu: document.getElementById('nama_ibu').value,
+                    nama_anak: document.getElementById('nama_anak').value,
+                    tanggal_lahir_anak: document.getElementById('tanggal_lahir_anak').value
+                };
+            } else if (role === 'admin') {
+                endpoint = '/login/admin';
+                body = {
+                    password: document.getElementById('password_admin').value
+                };
+            }
+
+            try {
+                const response = await apiCall(endpoint, 'POST', body);
+
+                // Simpan data
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                if (response.data.anak) {
+                    localStorage.setItem('anak', JSON.stringify(response.data.anak));
+                }
+
+                // Redirect sesuai role
+                if (role === 'taruna') {
+                    window.location.href = 'dashboard/taruna.html';
+                } else if (role === 'orang_tua') {
+                    window.location.href = 'dashboard/orangtua.html';
+                } else if (role === 'admin') {
+                    window.location.href = 'dashboard/admin.html';
+                }
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        });
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertMessage');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.classList.remove('d-none');
+        }
+    </script>
+</body>
+</html>
