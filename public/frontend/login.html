@@ -3,85 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistem Cuti Taruna</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <title>Login Modern - Sistem Cuti Taruna</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom styles (opsional) -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-sign-in-alt me-2"></i>Login</h3>
-                        <p class="mb-0">Silakan pilih role dan masukkan kredensial Anda</p>
+<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 min-h-screen flex items-center justify-center p-4">
+    <!-- Background animated shapes -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-white rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="relative w-full max-w-md">
+        <div class="glass-effect rounded-2xl shadow-2xl p-8 space-y-6">
+            <!-- Header -->
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white">Selamat Datang</h2>
+                <p class="text-indigo-100 mt-2">Silakan masuk ke akun Anda</p>
+            </div>
+
+            <!-- Alert -->
+            <div id="alertMessage" class="hidden bg-red-500/20 border border-red-500 text-red-100 px-4 py-3 rounded-lg text-sm" role="alert"></div>
+
+            <!-- Form -->
+            <form id="loginForm" class="space-y-5">
+                <!-- Role Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-white mb-2">Pilih Role</label>
+                    <select id="role" required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                        <option value="" class="bg-gray-800 text-white">-- Pilih Role --</option>
+                        <option value="taruna" class="bg-gray-800 text-white">Taruna</option>
+                        <option value="orang_tua" class="bg-gray-800 text-white">Orang Tua</option>
+                        <option value="admin" class="bg-gray-800 text-white">Admin</option>
+                    </select>
+                </div>
+
+                <!-- Taruna Fields -->
+                <div id="tarunaFields" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">NPM</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-id-card"></i></span>
+                            <input type="text" id="npm" placeholder="Masukkan NPM" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <!-- Alert untuk error -->
-                        <div id="alertMessage" class="alert alert-danger d-none" role="alert"></div>
-
-                        <form id="loginForm">
-                            <div class="mb-4">
-                                <label class="form-label">Pilih Role</label>
-                                <select class="form-select" id="role" required>
-                                    <option value="">-- Pilih Role --</option>
-                                    <option value="taruna">Taruna</option>
-                                    <option value="orang_tua">Orang Tua</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
-
-                            <!-- Fields untuk Taruna -->
-                            <div id="tarunaFields" style="display: none;">
-                                <div class="mb-3">
-                                    <label class="form-label"><i class="fas fa-id-card me-2"></i>NPM</label>
-                                    <input type="text" class="form-control" id="npm" placeholder="Masukkan NPM">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label"><i class="fas fa-lock me-2"></i>Password</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Masukkan password">
-                                </div>
-                            </div>
-
-                            <!-- Fields untuk Orang Tua -->
-                            <div id="orangTuaFields" style="display: none;">
-                                <div class="mb-3">
-                                    <label class="form-label"><i class="fas fa-female me-2"></i>Nama Ibu</label>
-                                    <input type="text" class="form-control" id="nama_ibu" placeholder="Masukkan nama ibu">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label"><i class="fas fa-child me-2"></i>Nama Anak</label>
-                                    <input type="text" class="form-control" id="nama_anak" placeholder="Masukkan nama anak">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label"><i class="fas fa-calendar me-2"></i>Tanggal Lahir Anak</label>
-                                    <input type="date" class="form-control" id="tanggal_lahir_anak">
-                                </div>
-                            </div>
-
-                            <!-- Fields untuk Admin -->
-                            <div id="adminFields" style="display: none;">
-                                <div class="mb-3">
-                                    <label class="form-label"><i class="fas fa-lock me-2"></i>Password Admin</label>
-                                    <input type="password" class="form-control" id="password_admin" placeholder="Masukkan password admin">
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100 mt-3">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login
-                            </button>
-                        </form>
-
-                        <hr class="my-4">
-                        <div class="text-center">
-                            <p class="mb-0">Belum punya akun taruna? <a href="register.html" class="text-decoration-none">Daftar di sini</a></p>
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" placeholder="Masukkan password" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
                         </div>
                     </div>
                 </div>
+
+                <!-- Orang Tua Fields -->
+                <div id="orangTuaFields" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">Nama Ibu</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-female"></i></span>
+                            <input type="text" id="nama_ibu" placeholder="Masukkan nama ibu" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">Nama Anak</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-child"></i></span>
+                            <input type="text" id="nama_anak" placeholder="Masukkan nama anak" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">Tanggal Lahir Anak</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-calendar"></i></span>
+                            <input type="date" id="tanggal_lahir_anak" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition [color-scheme:dark]">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Fields -->
+                <div id="adminFields" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">Password Admin</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password_admin" placeholder="Masukkan password admin" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full py-3 px-4 bg-white text-indigo-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="text-center text-sm text-indigo-100">
+                Belum punya akun taruna?
+                <a href="register-modern.html" class="font-semibold text-white hover:underline">Daftar di sini</a>
             </div>
         </div>
     </div>
@@ -89,47 +134,52 @@
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script>
-        // Tampilkan field sesuai role
-        document.getElementById('role').addEventListener('change', function() {
-            const role = this.value;
-            document.getElementById('tarunaFields').style.display = 'none';
-            document.getElementById('orangTuaFields').style.display = 'none';
-            document.getElementById('adminFields').style.display = 'none';
+        // Toggle fields based on role
+        const roleSelect = document.getElementById('role');
+        const tarunaFields = document.getElementById('tarunaFields');
+        const orangTuaFields = document.getElementById('orangTuaFields');
+        const adminFields = document.getElementById('adminFields');
 
-            if (role === 'taruna') {
-                document.getElementById('tarunaFields').style.display = 'block';
-                document.getElementById('npm').setAttribute('required', 'required');
-                document.getElementById('password').setAttribute('required', 'required');
-                document.getElementById('nama_ibu').removeAttribute('required');
-                document.getElementById('nama_anak').removeAttribute('required');
-                document.getElementById('tanggal_lahir_anak').removeAttribute('required');
-                document.getElementById('password_admin').removeAttribute('required');
-            } else if (role === 'orang_tua') {
-                document.getElementById('orangTuaFields').style.display = 'block';
-                document.getElementById('nama_ibu').setAttribute('required', 'required');
-                document.getElementById('nama_anak').setAttribute('required', 'required');
-                document.getElementById('tanggal_lahir_anak').setAttribute('required', 'required');
-                document.getElementById('npm').removeAttribute('required');
-                document.getElementById('password').removeAttribute('required');
-                document.getElementById('password_admin').removeAttribute('required');
-            } else if (role === 'admin') {
-                document.getElementById('adminFields').style.display = 'block';
-                document.getElementById('password_admin').setAttribute('required', 'required');
-                document.getElementById('npm').removeAttribute('required');
-                document.getElementById('password').removeAttribute('required');
-                document.getElementById('nama_ibu').removeAttribute('required');
-                document.getElementById('nama_anak').removeAttribute('required');
-                document.getElementById('tanggal_lahir_anak').removeAttribute('required');
+        roleSelect.addEventListener('change', function() {
+            tarunaFields.classList.add('hidden');
+            orangTuaFields.classList.add('hidden');
+            adminFields.classList.add('hidden');
+
+            if (this.value === 'taruna') {
+                tarunaFields.classList.remove('hidden');
+                setRequired('taruna');
+            } else if (this.value === 'orang_tua') {
+                orangTuaFields.classList.remove('hidden');
+                setRequired('orang_tua');
+            } else if (this.value === 'admin') {
+                adminFields.classList.remove('hidden');
+                setRequired('admin');
             }
         });
 
-        // Handle form submit
+        function setRequired(role) {
+            // Reset required
+            document.querySelectorAll('input').forEach(el => el.required = false);
+
+            if (role === 'taruna') {
+                document.getElementById('npm').required = true;
+                document.getElementById('password').required = true;
+            } else if (role === 'orang_tua') {
+                document.getElementById('nama_ibu').required = true;
+                document.getElementById('nama_anak').required = true;
+                document.getElementById('tanggal_lahir_anak').required = true;
+            } else if (role === 'admin') {
+                document.getElementById('password_admin').required = true;
+            }
+        }
+
+        // Form submission
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const role = document.getElementById('role').value;
+            const role = roleSelect.value;
             if (!role) {
-                showAlert('Pilih role terlebih dahulu!', 'danger');
+                showAlert('Pilih role terlebih dahulu!', 'error');
                 return;
             }
 
@@ -158,32 +208,30 @@
 
             try {
                 const response = await apiCall(endpoint, 'POST', body);
-
-                // Simpan data
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('user', JSON.stringify(response.data.user));
                 if (response.data.anak) {
                     localStorage.setItem('anak', JSON.stringify(response.data.anak));
                 }
 
-                // Redirect sesuai role
-                if (role === 'taruna') {
-                    window.location.href = 'dashboard/taruna.html';
-                } else if (role === 'orang_tua') {
-                    window.location.href = 'dashboard/orangtua.html';
-                } else if (role === 'admin') {
-                    window.location.href = 'dashboard/admin.html';
-                }
+                // Redirect based on role
+                if (role === 'taruna') window.location.href = 'dashboard/taruna-modern.html';
+                else if (role === 'orang_tua') window.location.href = 'dashboard/orangtua-modern.html';
+                else if (role === 'admin') window.location.href = 'dashboard/admin-modern.html';
             } catch (error) {
-                showAlert(error.message, 'danger');
+                showAlert(error.message, 'error');
             }
         });
 
         function showAlert(message, type) {
             const alert = document.getElementById('alertMessage');
             alert.textContent = message;
-            alert.className = `alert alert-${type}`;
-            alert.classList.remove('d-none');
+            alert.classList.remove('hidden', 'bg-red-500/20', 'border-red-500', 'text-red-100', 'bg-green-500/20', 'border-green-500', 'text-green-100');
+            if (type === 'error') {
+                alert.classList.add('bg-red-500/20', 'border-red-500', 'text-red-100');
+            } else {
+                alert.classList.add('bg-green-500/20', 'border-green-500', 'text-green-100');
+            }
         }
     </script>
 </body>

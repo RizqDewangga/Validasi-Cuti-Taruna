@@ -3,192 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Taruna</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Dashboard Taruna Modern</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+        .sidebar {
+            background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+        }
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+    </style>
 </head>
-<body>
-    <div class="dashboard-container">
-        <div class="container-fluid">
-            <div class="row">
-                <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 px-0">
-                    <div class="sidebar">
-                        <div class="text-center mb-4">
-                            <img src="https://via.placeholder.com/80" class="rounded-circle mb-2" alt="Profile">
-                            <h5 id="userName" class="mb-1"></h5>
-                            <p class="text-muted">Taruna</p>
-                        </div>
-                        <nav class="nav flex-column">
-                            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                            <a class="nav-link" href="#pengajuan" data-bs-toggle="tab">
-                                <i class="fas fa-paper-plane"></i> Ajukan Cuti
-                            </a>
-                            <a class="nav-link" href="#riwayat" data-bs-toggle="tab">
-                                <i class="fas fa-history"></i> Riwayat Cuti
-                            </a>
-                            <a class="nav-link" href="#" onclick="logout()">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
-                        </nav>
+<body class="antialiased">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="sidebar w-64 text-white flex flex-col">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold flex items-center"><i class="fas fa-graduation-cap mr-3"></i>Cuti Taruna</h1>
+            </div>
+            <nav class="flex-1 px-4 space-y-2">
+                <a href="#" class="flex items-center px-4 py-3 text-white bg-white/10 rounded-lg transition hover:bg-white/20">
+                    <i class="fas fa-tachometer-alt w-6"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
+                    <i class="fas fa-paper-plane w-6"></i>
+                    <span>Ajukan Cuti</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
+                    <i class="fas fa-history w-6"></i>
+                    <span>Riwayat Cuti</span>
+                </a>
+                <a href="#" onclick="logout()" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
+                    <i class="fas fa-sign-out-alt w-6"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-white/20">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
                     </div>
-                </div>
-
-                <!-- Main Content -->
-                <div class="col-md-9 col-lg-10 main-content">
-                    <div class="tab-content">
-                        <!-- Dashboard Tab -->
-                        <div class="tab-pane fade show active" id="dashboard">
-                            <h2 class="mb-4">Dashboard Taruna</h2>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stat-card primary">
-                                        <div class="icon">
-                                            <i class="fas fa-clock"></i>
-                                        </div>
-                                        <h3 id="pendingCount">0</h3>
-                                        <p class="text-muted">Cuti Pending</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="stat-card success">
-                                        <div class="icon">
-                                            <i class="fas fa-check-circle"></i>
-                                        </div>
-                                        <h3 id="approvedCount">0</h3>
-                                        <p class="text-muted">Cuti Disetujui</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="stat-card danger">
-                                        <div class="icon">
-                                            <i class="fas fa-times-circle"></i>
-                                        </div>
-                                        <h3 id="rejectedCount">0</h3>
-                                        <p class="text-muted">Cuti Ditolak</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card mt-4">
-                                <div class="card-header bg-white">
-                                    <h5 class="mb-0">Cuti Terbaru</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Alamat Tujuan</th>
-                                                    <th>Alamat Dituju</th>
-                                                    <th>Transportasi</th>
-                                                    <th>Status</th>
-                                                    <th>Tanggal</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="recentCuti">
-                                                <!-- Data akan diisi via JS -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ajukan Cuti Tab -->
-                        <div class="tab-pane fade" id="pengajuan">
-                            <h2 class="mb-4">Ajukan Cuti Baru</h2>
-                            <div class="card">
-                                <div class="card-body">
-                                    <form id="cutiForm">
-                                        <div class="mb-3">
-                                            <label class="form-label">Alamat Tujuan</label>
-                                            <input type="text" class="form-control" name="alamat_tujuan" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Alamat yang Dituju</label>
-                                            <input type="text" class="form-control" name="alamat_dituju" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Transportasi</label>
-                                            <select class="form-select" name="transportasi" required>
-                                                <option value="">Pilih transportasi</option>
-                                                <option value="Kereta">Kereta</option>
-                                                <option value="Bus">Bus</option>
-                                                <option value="Pesawat">Pesawat</option>
-                                                <option value="Mobil Pribadi">Mobil Pribadi</option>
-                                                <option value="Lainnya">Lainnya</option>
-                                            </select>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-paper-plane me-2"></i>Ajukan
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Riwayat Cuti Tab -->
-                        <div class="tab-pane fade" id="riwayat">
-                            <h2 class="mb-4">Riwayat Cuti</h2>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Alamat Tujuan</th>
-                                                    <th>Alamat Dituju</th>
-                                                    <th>Transportasi</th>
-                                                    <th>Status</th>
-                                                    <th>Disetujui Oleh</th>
-                                                    <th>Tanggal Approve</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="cutiList">
-                                                <!-- Data akan diisi via JS -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="ml-3">
+                        <p id="userName" class="text-sm font-semibold">Loading...</p>
+                        <p class="text-xs text-white/70">Taruna</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
+
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
+                                <i class="fas fa-clock text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Cuti Pending</p>
+                                <p id="pendingCount" class="text-2xl font-bold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
+                                <i class="fas fa-check-circle text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Disetujui</p>
+                                <p id="approvedCount" class="text-2xl font-bold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+                                <i class="fas fa-times-circle text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Ditolak</p>
+                                <p id="rejectedCount" class="text-2xl font-bold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Pengajuan Cuti -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Ajukan Cuti Baru</h3>
+                    <form id="cutiForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Tujuan</label>
+                            <input type="text" name="alamat_tujuan" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Dituju</label>
+                            <input type="text" name="alamat_dituju" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Transportasi</label>
+                            <select name="transportasi" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Pilih</option>
+                                <option value="Kereta">Kereta</option>
+                                <option value="Bus">Bus</option>
+                                <option value="Pesawat">Pesawat</option>
+                                <option value="Mobil Pribadi">Mobil Pribadi</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-3">
+                            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                                <i class="fas fa-paper-plane mr-2"></i>Ajukan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabel Riwayat Cuti -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Riwayat Cuti</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tujuan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dituju</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transportasi</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Disetujui</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cutiList" class="bg-white divide-y divide-gray-200">
+                                <!-- Data dari JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script src="../js/config.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
     <script>
-        // Cek autentikasi
         const auth = checkAuth('taruna');
         if (!auth) throw new Error('Not authenticated');
-
         const user = auth.user;
         const token = auth.token;
 
-        // Tampilkan nama user
         document.getElementById('userName').textContent = user.nama_lengkap;
 
-        // Load data cuti
         async function loadCuti() {
             try {
                 const response = await apiCall('/cuti', 'GET', null, token);
                 const cutiList = response.data;
 
-                // Update statistik
                 const pending = cutiList.filter(c => c.status === 'pending').length;
                 const approved = cutiList.filter(c => c.status === 'disetujui').length;
                 const rejected = cutiList.filter(c => c.status === 'ditolak').length;
@@ -197,60 +182,38 @@
                 document.getElementById('approvedCount').textContent = approved;
                 document.getElementById('rejectedCount').textContent = rejected;
 
-                // Tampilkan di tabel riwayat
                 const tbody = document.getElementById('cutiList');
                 tbody.innerHTML = '';
-
                 cutiList.forEach((cuti, index) => {
                     const row = tbody.insertRow();
                     row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${cuti.alamat_tujuan}</td>
-                        <td>${cuti.alamat_dituju}</td>
-                        <td>${cuti.transportasi}</td>
-                        <td>
-                            <span class="badge ${cuti.status === 'pending' ? 'badge-pending' : cuti.status === 'disetujui' ? 'badge-approved' : 'badge-rejected'}">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index+1}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.alamat_tujuan}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.alamat_dituju}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.transportasi}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                ${cuti.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                  cuti.status === 'disetujui' ? 'bg-green-100 text-green-800' :
+                                  'bg-red-100 text-red-800'}">
                                 ${cuti.status}
                             </span>
                         </td>
-                        <td>${cuti.approver ? cuti.approver.nama_lengkap : '-'}</td>
-                        <td>${formatDate(cuti.approved_at)}</td>
-                        <td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.approver ? cuti.approver.nama_lengkap : '-'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatDate(cuti.approved_at)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             ${cuti.status === 'pending' ?
-                                `<button class="btn btn-sm btn-outline-danger" onclick="deleteCuti(${cuti.id})">
+                                `<button onclick="deleteCuti(${cuti.id})" class="text-red-600 hover:text-red-900">
                                     <i class="fas fa-trash"></i>
-                                </button>` :
-                                '-'}
+                                </button>` : '-'}
                         </td>
                     `;
                 });
-
-                // Tampilkan 5 cuti terbaru di dashboard
-                const recent = cutiList.slice(0, 5);
-                const recentBody = document.getElementById('recentCuti');
-                recentBody.innerHTML = '';
-                recent.forEach((cuti, index) => {
-                    const row = recentBody.insertRow();
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${cuti.alamat_tujuan}</td>
-                        <td>${cuti.alamat_dituju}</td>
-                        <td>${cuti.transportasi}</td>
-                        <td>
-                            <span class="badge ${cuti.status === 'pending' ? 'badge-pending' : cuti.status === 'disetujui' ? 'badge-approved' : 'badge-rejected'}">
-                                ${cuti.status}
-                            </span>
-                        </td>
-                        <td>${formatDate(cuti.created_at)}</td>
-                    `;
-                });
-
             } catch (error) {
-                console.error('Gagal memuat cuti:', error);
+                console.error(error);
             }
         }
 
-        // Submit form cuti
         document.getElementById('cutiForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -259,38 +222,28 @@
                 alamat_dituju: formData.get('alamat_dituju'),
                 transportasi: formData.get('transportasi')
             };
-
             try {
                 await apiCall('/cuti', 'POST', body, token);
-                alert('Pengajuan cuti berhasil!');
+                alert('Cuti diajukan!');
                 loadCuti();
                 e.target.reset();
-                // Pindah ke tab riwayat
-                document.querySelector('[href="#riwayat"]').click();
             } catch (error) {
-                alert('Gagal mengajukan cuti: ' + error.message);
+                alert('Gagal: ' + error.message);
             }
         });
 
-        // Hapus cuti
         window.deleteCuti = async function(id) {
-            if (!confirm('Yakin ingin menghapus pengajuan ini?')) return;
-
+            if (!confirm('Yakin hapus?')) return;
             try {
                 await apiCall(`/cuti/${id}`, 'DELETE', null, token);
                 loadCuti();
             } catch (error) {
-                alert('Gagal menghapus: ' + error.message);
+                alert('Gagal: ' + error.message);
             }
         };
 
-        // Logout
         window.logout = logout;
-
-        // Load data saat halaman dimuat
         loadCuti();
     </script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
