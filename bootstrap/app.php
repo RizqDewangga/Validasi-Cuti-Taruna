@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Tambahkan baris ini untuk mengecualikan route API dari CSRF
+        $middleware->validateCsrfTokens(except: [
+            'api/*',  // Semua route yang diawali 'api/' tidak perlu CSRF
+        ]);
+
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
