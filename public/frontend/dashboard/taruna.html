@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Taruna Modern</title>
+    <title>Dashboard Taruna - Modern</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -12,12 +12,50 @@
         .sidebar {
             background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
         }
+        .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            border-left: 4px solid white;
+        }
         .card-hover {
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        /* Kalender styling */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+        .calendar-day.today {
+            background: #4f46e5;
+            color: white;
+            font-weight: bold;
+        }
+        .calendar-day.holiday {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .holiday-info {
+            font-size: 0.6rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            padding: 0 2px;
         }
     </style>
 </head>
@@ -26,18 +64,20 @@
         <!-- Sidebar -->
         <aside class="sidebar w-64 text-white flex flex-col">
             <div class="p-6">
-                <h1 class="text-2xl font-bold flex items-center"><i class="fas fa-graduation-cap mr-3"></i>Cuti Taruna</h1>
-            </div>
+<h1 class="text-2xl font-bold flex items-center">
+    <img src="../assets/images/logo-poltekssn.png" alt="Logo Poltek SSN" class="h-8 w-8 mr-3">
+    Cuti Taruna
+</h1>          </div>
             <nav class="flex-1 px-4 space-y-2">
-                <a href="#" class="flex items-center px-4 py-3 text-white bg-white/10 rounded-lg transition hover:bg-white/20">
+                <a href="#" id="menu-dashboard" class="flex items-center px-4 py-3 text-white bg-white/10 rounded-lg transition hover:bg-white/20 active">
                     <i class="fas fa-tachometer-alt w-6"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
+                <a href="#" id="menu-ajukan" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
                     <i class="fas fa-paper-plane w-6"></i>
                     <span>Ajukan Cuti</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
+                <a href="#" id="menu-riwayat" class="flex items-center px-4 py-3 text-white/80 rounded-lg transition hover:bg-white/20 hover:text-white">
                     <i class="fas fa-history w-6"></i>
                     <span>Riwayat Cuti</span>
                 </a>
@@ -62,176 +102,206 @@
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto p-8">
             <div class="max-w-7xl mx-auto">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
+                <!-- Konten Dashboard -->
+                <div id="dashboard-content">
+                    <!-- Header Hello -->
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800">Hello, <span id="helloName">Taruna</span>!</h2>
+                        <p class="text-gray-600 text-lg mt-1">NPM: <span id="helloNpm">-</span></p>
+                        <p class="text-gray-600" id="realTimeClock"></p>
+                    </div>
 
-                <!-- Stat Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
-                                <i class="fas fa-clock text-2xl"></i>
+                    <!-- Informasi Tim Piket & Kalender -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <!-- Tim Piket -->
+                        <div class="bg-white rounded-xl shadow-md p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-users text-indigo-600 mr-2"></i>Tim Pengasuhan Piket
+                            </h3>
+                            <div id="piketInfo" class="text-center py-4">
+                                <div class="animate-pulse">Memuat...</div>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Cuti Pending</p>
-                                <p id="pendingCount" class="text-2xl font-bold text-gray-800">0</p>
+                            <p class="text-sm text-gray-500 mt-2">*Berganti setiap hari pukul 09.00 WIB</p>
+                        </div>
+
+                        <!-- Kalender -->
+                        <div class="bg-white rounded-xl shadow-md p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                                    <i class="fas fa-calendar-alt text-indigo-600 mr-2"></i>Kalender
+                                </h3>
+                                <div class="flex space-x-2">
+                                    <button id="prevMonth" class="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span id="currentMonthYear" class="px-4 py-1 bg-indigo-100 text-indigo-800 rounded-lg font-medium"></span>
+                                    <button id="nextMonth" class="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="calendar-container">
+                                <div class="animate-pulse">Memuat kalender...</div>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
-                                <i class="fas fa-check-circle text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Disetujui</p>
-                                <p id="approvedCount" class="text-2xl font-bold text-gray-800">0</p>
+
+                    <!-- Statistik Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
+                                    <i class="fas fa-clock text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">Cuti Pending</p>
+                                    <p id="pendingCount" class="text-2xl font-bold text-gray-800">0</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
-                                <i class="fas fa-times-circle text-2xl"></i>
+                        <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
+                                    <i class="fas fa-check-circle text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">Disetujui</p>
+                                    <p id="approvedCount" class="text-2xl font-bold text-gray-800">0</p>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Ditolak</p>
-                                <p id="rejectedCount" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+                                    <i class="fas fa-times-circle text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">Ditolak</p>
+                                    <p id="rejectedCount" class="text-2xl font-bold text-gray-800">0</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Form Pengajuan Cuti Baru -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Ajukan Cuti Baru</h3>
-                    <form id="cutiForm" enctype="multipart/form-data">
-                        <!-- Alamat Cuti Lengkap -->
-                        <div class="mb-4">
-                            <h4 class="text-md font-medium text-gray-700 mb-3">Alamat Cuti Tujuan</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jalan</label>
-                                    <input type="text" name="alamat_cuti[jalan]" required
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">RT/RW</label>
-                                    <input type="text" name="alamat_cuti[rt_rw]" required placeholder="contoh: 001/002"
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Kelurahan</label>
-                                    <input type="text" name="alamat_cuti[kelurahan]" required
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Kecamatan</label>
-                                    <input type="text" name="alamat_cuti[kecamatan]" required
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Kota</label>
-                                    <input type="text" name="alamat_cuti[kota]" required
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Provinsi</label>
-                                    <input type="text" name="alamat_cuti[provinsi]" required
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tujuan -->
-                        <div class="mb-4">
-                            <h4 class="text-md font-medium text-gray-700 mb-3">Tujuan Cuti</h4>
-                            <div class="mb-3">
-                                <div class="flex items-center space-x-4">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="tujuan" value="orang_tua" class="form-radio text-indigo-600" checked>
-                                        <span class="ml-2">Orang Tua</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="tujuan" value="kerabat" class="form-radio text-indigo-600">
-                                        <span class="ml-2">Kerabat</span>
-                                    </label>
+                <!-- Konten Ajukan Cuti (tersembunyi) -->
+                <div id="ajukan-content" class="hidden">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Ajukan Cuti Baru</h2>
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <form id="cutiForm" enctype="multipart/form-data">
+                            <!-- Alamat Cuti Lengkap -->
+                            <div class="mb-4">
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Alamat Cuti Tujuan</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Jalan</label>
+                                        <input type="text" name="alamat_cuti[jalan]" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">RT/RW</label>
+                                        <input type="text" name="alamat_cuti[rt_rw]" required placeholder="001/002" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelurahan</label>
+                                        <input type="text" name="alamat_cuti[kelurahan]" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Kecamatan</label>
+                                        <input type="text" name="alamat_cuti[kecamatan]" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Kota</label>
+                                        <input type="text" name="alamat_cuti[kota]" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Provinsi</label>
+                                        <input type="text" name="alamat_cuti[provinsi]" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Field untuk Kerabat (muncul jika pilih kerabat) -->
-                            <div id="kerabatFields" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kerabat</label>
-                                    <input type="text" name="nama_kerabat" id="nama_kerabat"
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <!-- Tujuan -->
+                            <div class="mb-4">
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Tujuan Cuti</h4>
+                                <div class="mb-3">
+                                    <div class="flex items-center space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="tujuan" value="orang_tua" class="form-radio text-indigo-600" checked>
+                                            <span class="ml-2">Orang Tua</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="tujuan" value="kerabat" class="form-radio text-indigo-600">
+                                            <span class="ml-2">Kerabat</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon Kerabat</label>
-                                    <input type="text" name="nomor_kerabat" id="nomor_kerabat" placeholder="0812xxxxxx"
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Transportasi dan Tiket -->
-                        <div class="mb-4">
-                            <h4 class="text-md font-medium text-gray-700 mb-3">Transportasi</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transportasi</label>
-                                    <select name="transportasi" id="transportasi" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="">-- Pilih Transportasi --</option>
-                                        <option value="kereta">Kereta Api</option>
-                                        <option value="pesawat">Pesawat</option>
-                                        <option value="bus">Bus</option>
-                                        <option value="travel">Travel</option>
-                                        <option value="ojol">Ojek Online</option>
-                                        <option value="pribadi">Kendaraan Pribadi</option>
-                                    </select>
-                                </div>
-
-                                <!-- Upload Tiket (muncul untuk transportasi tertentu) -->
-                                <div id="uploadTiketField" class="hidden">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Tiket (PDF/Gambar)</label>
-                                    <input type="file" name="tiket" id="tiket" accept=".pdf,.jpg,.jpeg,.png"
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <p class="text-xs text-gray-500 mt-1">Maksimal 2MB. Format: PDF, JPG, PNG</p>
+                                <div id="kerabatFields" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kerabat</label>
+                                        <input type="text" name="nama_kerabat" id="nama_kerabat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon Kerabat</label>
+                                        <input type="text" name="nomor_kerabat" id="nomor_kerabat" placeholder="0812xxxxxx" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Submit Button -->
-                        <div class="md:col-span-2">
+                            <!-- Transportasi dan Tiket -->
+                            <div class="mb-4">
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Transportasi</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transportasi</label>
+                                        <select name="transportasi" id="transportasi" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                            <option value="">-- Pilih Transportasi --</option>
+                                            <option value="kereta">Kereta Api</option>
+                                            <option value="pesawat">Pesawat</option>
+                                            <option value="bus">Bus</option>
+                                            <option value="travel">Travel</option>
+                                            <option value="ojol">Ojek Online</option>
+                                            <option value="pribadi">Kendaraan Pribadi</option>
+                                        </select>
+                                    </div>
+                                    <div id="uploadTiketField" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Upload Tiket (PDF/Gambar)</label>
+                                        <input type="file" name="tiket" id="tiket" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                        <p class="text-xs text-gray-500 mt-1">Maksimal 2MB. Format: PDF, JPG, PNG</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
                                 <i class="fas fa-paper-plane mr-2"></i>Ajukan Cuti
                             </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- Tabel Riwayat Cuti -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Riwayat Cuti</h3>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat Cuti</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tujuan</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transportasi</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiket</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Disetujui</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cutiList" class="bg-white divide-y divide-gray-200">
-                                <!-- Data dari JS -->
-                            </tbody>
-                        </table>
+                <!-- Konten Riwayat Cuti (tersembunyi) -->
+                <div id="riwayat-content" class="hidden">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Riwayat Cuti</h2>
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alamat Cuti</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tujuan</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Transportasi</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tiket</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Disetujui</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cutiList" class="bg-white divide-y divide-gray-200">
+                                    <!-- Data dari JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -242,181 +312,418 @@
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
     <script>
-        // ==================== INISIALISASI ====================
-        const auth = checkAuth('taruna');
-        if (!auth) throw new Error('Not authenticated');
-        const user = auth.user;
-        const token = auth.token;
+        document.addEventListener('DOMContentLoaded', function() {
+            // ==================== INISIALISASI ====================
+            const auth = checkAuth('taruna');
+            if (!auth) return; // redirect sudah di handle checkAuth
+            const user = auth.user;
+            const token = auth.token;
 
-        document.getElementById('userName').textContent = user.nama_lengkap;
+            // Isi data user
+            const userNameEl = document.getElementById('userName');
+            const helloNameEl = document.getElementById('helloName');
+            const helloNpmEl = document.getElementById('helloNpm');
+            if (userNameEl) userNameEl.textContent = user.nama_lengkap;
+            if (helloNameEl) helloNameEl.textContent = user.nama_lengkap;
+            if (helloNpmEl) helloNpmEl.textContent = user.npm || '-';
 
-        // ==================== ELEMEN DOM ====================
-        const tujuanRadios = document.querySelectorAll('input[name="tujuan"]');
-        const kerabatFields = document.getElementById('kerabatFields');
-        const transportasiSelect = document.getElementById('transportasi');
-        const uploadTiketField = document.getElementById('uploadTiketField');
-        const tiketInput = document.getElementById('tiket');
-        const cutiForm = document.getElementById('cutiForm');
+            // ==================== FUNGSI TAB ====================
+            const menuDashboard = document.getElementById('menu-dashboard');
+            const menuAjukan = document.getElementById('menu-ajukan');
+            const menuRiwayat = document.getElementById('menu-riwayat');
+            const dashboardContent = document.getElementById('dashboard-content');
+            const ajukanContent = document.getElementById('ajukan-content');
+            const riwayatContent = document.getElementById('riwayat-content');
 
-        // ==================== FUNGSI HELPER ====================
-        function formatAlamat(alamatCuti) {
-            if (!alamatCuti) return '-';
-            return `${alamatCuti.jalan}, RT/RW ${alamatCuti.rt_rw}, ${alamatCuti.kelurahan}, ${alamatCuti.kecamatan}, ${alamatCuti.kota}, ${alamatCuti.provinsi}`;
-        }
-
-        // ==================== TOGGLE FIELD ====================
-        // Toggle kerabat fields
-        tujuanRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.value === 'kerabat') {
-                    kerabatFields.classList.remove('hidden');
-                    document.getElementById('nama_kerabat').required = true;
-                    document.getElementById('nomor_kerabat').required = true;
-                } else {
-                    kerabatFields.classList.add('hidden');
-                    document.getElementById('nama_kerabat').required = false;
-                    document.getElementById('nomor_kerabat').required = false;
-                }
-            });
-        });
-
-        // Toggle upload tiket berdasarkan transportasi
-        transportasiSelect.addEventListener('change', function() {
-            const needTiket = ['kereta', 'pesawat', 'bus', 'travel'].includes(this.value);
-            if (needTiket) {
-                uploadTiketField.classList.remove('hidden');
-                tiketInput.required = true;
-            } else {
-                uploadTiketField.classList.add('hidden');
-                tiketInput.required = false;
+            function showContent(showElement) {
+                // Sembunyikan semua
+                if (dashboardContent) dashboardContent.style.display = 'none';
+                if (ajukanContent) ajukanContent.style.display = 'none';
+                if (riwayatContent) riwayatContent.style.display = 'none';
+                // Tampilkan yang dipilih
+                if (showElement) showElement.style.display = 'block';
             }
-        });
 
-        // ==================== LOAD DATA CUTI ====================
-        async function loadCuti() {
-            try {
-                const response = await apiCall('/cuti', 'GET', null, token);
-                const cutiList = response.data;
-
-                // Hitung statistik
-                const pending = cutiList.filter(c => c.status === 'pending').length;
-                const approved = cutiList.filter(c => c.status === 'disetujui').length;
-                const rejected = cutiList.filter(c => c.status === 'ditolak').length;
-
-                document.getElementById('pendingCount').textContent = pending;
-                document.getElementById('approvedCount').textContent = approved;
-                document.getElementById('rejectedCount').textContent = rejected;
-
-                // Tampilkan tabel
-                const tbody = document.getElementById('cutiList');
-                tbody.innerHTML = '';
-
-                cutiList.forEach((cuti, index) => {
-                    const row = tbody.insertRow();
-
-                    // Format tujuan display
-                    let tujuanDisplay = 'Orang Tua';
-                    if (cuti.tujuan === 'kerabat') {
-                        tujuanDisplay = `Kerabat: ${cuti.nama_kerabat || '-'}<br>${cuti.nomor_kerabat || '-'}`;
+            function setActiveMenu(active) {
+                [menuDashboard, menuAjukan, menuRiwayat].forEach(menu => {
+                    if (menu) {
+                        menu.classList.remove('active', 'bg-white/10');
+                        menu.classList.add('text-white/80');
                     }
-
-                    // Format link tiket
-                    let tiketDisplay = '-';
-                    if (cuti.tiket_path) {
-                        const baseStorageUrl = CONFIG.API_BASE_URL.replace('/api', '/storage');
-                        tiketDisplay = `<a href="${baseStorageUrl}/${cuti.tiket_path}" target="_blank" class="text-indigo-600 hover:text-indigo-900">
-                                            <i class="fas fa-file-pdf"></i> Lihat Tiket
-                                        </a>`;
-                    }
-
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index+1}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900 max-w-xs">${formatAlamat(cuti.alamat_cuti)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${tujuanDisplay}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.transportasi || '-'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${tiketDisplay}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                ${cuti.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                  cuti.status === 'disetujui' ? 'bg-green-100 text-green-800' :
-                                  'bg-red-100 text-red-800'}">
-                                ${cuti.status}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.approver ? cuti.approver.nama_lengkap : '-'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatDate(cuti.approved_at)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            ${cuti.status === 'pending' ?
-                                `<button onclick="deleteCuti(${cuti.id})" class="text-red-600 hover:text-red-900">
-                                    <i class="fas fa-trash"></i>
-                                </button>` : '-'}
-                        </td>
-                    `;
                 });
-            } catch (error) {
-                console.error('Gagal memuat cuti:', error);
+                if (active) {
+                    active.classList.remove('text-white/80');
+                    active.classList.add('bg-white/10', 'active');
+                }
             }
-        }
 
-        // ==================== SUBMIT FORM ====================
-        cutiForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            // Buat FormData
-            const formData = new FormData(this);
-
-            try {
-                // Tampilkan loading
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
-                submitBtn.disabled = true;
-
-                // Kirim dengan apiCall (isFormData = true)
-                const response = await apiCall('/cuti', 'POST', formData, token, true);
-
-                alert('Pengajuan cuti berhasil!');
-                loadCuti(); // refresh tabel
-                this.reset(); // reset form
-
-                // Reset tampilan field
-                kerabatFields.classList.add('hidden');
-                uploadTiketField.classList.add('hidden');
-
-                // Reset required attributes
-                document.getElementById('nama_kerabat').required = false;
-                document.getElementById('nomor_kerabat').required = false;
-                tiketInput.required = false;
-
-                // Reset button
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-
-            } catch (error) {
-                alert('Gagal mengajukan cuti: ' + error.message);
-                // Reset button
-                const submitBtn = this.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Ajukan Cuti';
-                submitBtn.disabled = false;
+            // Pasang event listener
+            if (menuDashboard && dashboardContent) {
+                menuDashboard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContent(dashboardContent);
+                    setActiveMenu(menuDashboard);
+                });
             }
+
+            if (menuAjukan && ajukanContent) {
+                menuAjukan.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContent(ajukanContent);
+                    setActiveMenu(menuAjukan);
+                });
+            }
+
+            if (menuRiwayat && riwayatContent) {
+                menuRiwayat.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContent(riwayatContent);
+                    setActiveMenu(menuRiwayat);
+                    // Muat ulang riwayat saat tab dibuka
+                    if (typeof loadRiwayat === 'function') loadRiwayat();
+                });
+            }
+
+            // Tampilkan dashboard pertama kali
+            showContent(dashboardContent);
+            setActiveMenu(menuDashboard);
+
+            // ==================== JAM REAL-TIME ====================
+            const realTimeClock = document.getElementById('realTimeClock');
+            if (realTimeClock) {
+                function updateClock() {
+                    const now = new Date();
+                    const options = {
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        timeZone: 'Asia/Jakarta', hour12: false
+                    };
+                    realTimeClock.textContent = now.toLocaleDateString('id-ID', options) + ' WIB';
+                }
+                setInterval(updateClock, 1000);
+                updateClock();
+            }
+
+            // ==================== TIM PIKET ====================
+const piketInfo = document.getElementById('piketInfo');
+if (piketInfo) {
+    // Data tim pengasuh (berdasarkan daftar yang diberikan)
+    const teams = {
+        'A': [
+            'Ari Andriansah, S.Tr.Kom',
+            'Fatria Pramana Aji, S.Tr.Kom',
+            'Monica Isabella, S.Tr.Kom',
+            'Dendi Risman Saputra, S.Tr.Kom',
+            'Paramitha, S.S.T.MP., M.H.',
+            'Muhammad Faqih Rohmani, S.Tr.Kom',
+            'Mauli Bayu Segoro, S.Tr.Kom',
+            'Yoga Adi Pratama, S.Tr.Kom',
+            'Imas Purbasari, S.Tr.Kom',
+            'Nabella Permatasari, S.Tr.Kom',
+            'Andi Parada Tambunan, S.Tr.Kom'
+        ],
+        'B': [
+            'Achmad Rahandrianto, S.Tr.Kom',
+            'Muhammad Dandy Pramana, S.Tr.Kom',
+            'Nadya Marta Matanggwan, S.Tr.Kom',
+            'Tubagus Eiffel Rivaldo, S.Tr.Kom',
+            'Muhammad Luthfi, S.Tr.Kom',
+            'Nusranto Pratama Tirsa, S.Tr.Kom',
+            'Tio Hana Lolita Boru Lumban Tobing, S.Tr.Kom',
+            'Hadyan Radifan, S.Tr.Kom',
+            'Muhammad Adib Nursumirat, S.Tr.Kom',
+            'Mega Rosita, S.Tr.Kom.',
+            'Citra Dewi Permata Suci, S.Tr.Kom'
+        ],
+        'C': [
+            'Rasyid Wahyu Kuncoro, S.Tr.Kom',
+            'Alif Jihan Abdul Kafi, S.Tr.Kom',
+            'Bintang Wahyudono, S.Tr.Kom',
+            'Amalia Fitri Kurnia Dewi, S.Tr.MP., M.T',
+            'Afifa Nurrahmawati, S.Tr.Kom',
+            'Canny Siska Georgina, S.Tr.TP., M.T.I',
+            'Fahmi Dwi Refizal, S.Tr.Kom',
+            'Rycka Septiasari, S.Tr.Kom',
+            'Ivan Miftahul Huda, S.Tr.Kom',
+            'Aditya Krishna Aji, S.Tr.Kom',
+            'Rizky Kurniandi, S.Tr.Kom'
+        ],
+        'D': [
+            'Bio Akram, S.Tr.Kom',
+            'Aulia Nurul Azizah, S.Tr.Kom',
+            'Jefferson Benyamin, S.Tr.MP., M.Han.',
+            'Candra Kurniawan, S.Tr.Kom',
+            'Kadek Krishna Adi Muliastawan, S.Tr.Kom',
+            'Jabang Aru Saputro, S.Tr.Kom',
+            'Ana Rochana, S.Tr.Kom',
+            'Aghisa Laelatu Zuhriyah, S.Tr.Kom',
+            'Mochammad Fadhli Maghfur Shofiyuddin, S.Tr.Kom',
+            'Wanodya Estithama, S.Tr.Kom',
+            'Aulia Tri Rahwamati, S.Tr.Kom'
+        ]
+    };
+
+    function getPiketTeam() {
+        const now = new Date();
+        const jam = now.getHours();
+        const daysSinceEpoch = Math.floor(now.getTime() / (24 * 60 * 60 * 1000));
+        // Jika sebelum jam 9 pagi, maka tim yang berlaku adalah kemarin
+        const shift = (jam < 9) ? daysSinceEpoch - 1 : daysSinceEpoch;
+        const teamIndex = Math.abs(shift) % 4;
+        const teamLetters = ['A', 'B', 'C', 'D'];
+        return teamLetters[teamIndex];
+    }
+
+    function displayPiket() {
+        const teamLetter = getPiketTeam();
+        const teamMembers = teams[teamLetter];
+        let membersHtml = '';
+        teamMembers.forEach(member => {
+            membersHtml += `<div class="text-gray-700 py-1 border-b border-gray-100 last:border-0">${member}</div>`;
         });
+        piketInfo.innerHTML = `
+            <div class="text-2xl font-bold text-indigo-600 mb-3">Tim ${teamLetter}</div>
+            <div class="text-left max-h-64 overflow-y-auto pr-2">
+                ${membersHtml}
+            </div>
+        `;
+    }
+    displayPiket();
+}
 
-        // ==================== DELETE CUTI ====================
-        window.deleteCuti = async function(id) {
-            if (!confirm('Yakin ingin menghapus pengajuan ini?')) return;
-            try {
-                await apiCall(`/cuti/${id}`, 'DELETE', null, token);
-                loadCuti();
-            } catch (error) {
-                alert('Gagal menghapus: ' + error.message);
+            // ==================== KALENDER ====================
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
+            const currentMonthYear = document.getElementById('currentMonthYear');
+            const calendarContainer = document.getElementById('calendar-container');
+
+            if (prevMonthBtn && nextMonthBtn && currentMonthYear && calendarContainer) {
+                let currentMonth = new Date().getMonth();
+                let currentYear = new Date().getFullYear();
+
+                const holidays = [
+                    { date: '2026-01-01', name: 'Tahun Baru Masehi' },
+                    { date: '2026-01-29', name: 'Tahun Baru Imlek' },
+                    { date: '2026-03-11', name: 'Hari Raya Nyepi' },
+                    { date: '2026-03-28', name: 'Wafat Isa Almasih' },
+                    { date: '2026-04-01', name: 'Cuti Bersama' },
+                    { date: '2026-04-02', name: 'Cuti Bersama' },
+                    { date: '2026-04-03', name: 'Cuti Bersama' },
+                    { date: '2026-05-01', name: 'Hari Buruh' },
+                    { date: '2026-05-12', name: 'Hari Raya Idul Fitri' },
+                    { date: '2026-05-13', name: 'Hari Raya Idul Fitri' },
+                    { date: '2026-05-26', name: 'Kenaikan Yesus Kristus' },
+                    { date: '2026-06-01', name: 'Hari Lahir Pancasila' },
+                    { date: '2026-07-19', name: 'Idul Adha' },
+                    { date: '2026-08-17', name: 'Hari Kemerdekaan RI' },
+                    { date: '2026-09-05', name: 'Maulid Nabi Muhammad' },
+                    { date: '2026-12-25', name: 'Hari Raya Natal' },
+                ];
+
+                function renderCalendar(month, year) {
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+                    const startDayOfWeek = firstDay.getDay(); // 0 = Minggu
+                    const totalDays = lastDay.getDate();
+
+                    const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                    currentMonthYear.innerHTML = `${monthNames[month]} ${year}`;
+
+                    let html = `<div class="grid grid-cols-7 gap-1 text-center font-semibold mb-2 text-gray-600">
+                        <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+                    </div>`;
+                    html += '<div class="calendar">';
+
+                    for (let i = 0; i < startDayOfWeek; i++) {
+                        html += '<div class="calendar-day opacity-30"></div>';
+                    }
+
+                    const todayDate = new Date().getDate();
+                    const todayMonth = new Date().getMonth();
+                    const todayYear = new Date().getFullYear();
+
+                    for (let d = 1; d <= totalDays; d++) {
+                        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                        const holiday = holidays.find(h => h.date === dateStr);
+                        const isToday = (d === todayDate && month === todayMonth && year === todayYear);
+                        const dayClass = `calendar-day ${isToday ? 'today' : ''} ${holiday ? 'holiday' : ''}`;
+                        html += `<div class="${dayClass}" title="${holiday ? holiday.name : ''}">
+                            <span>${d}</span>
+                            ${holiday ? `<div class="holiday-info">${holiday.name}</div>` : ''}
+                        </div>`;
+                    }
+                    html += '</div>';
+                    calendarContainer.innerHTML = html;
+                }
+
+                prevMonthBtn.addEventListener('click', () => {
+                    currentMonth--;
+                    if (currentMonth < 0) {
+                        currentMonth = 11;
+                        currentYear--;
+                    }
+                    renderCalendar(currentMonth, currentYear);
+                });
+
+                nextMonthBtn.addEventListener('click', () => {
+                    currentMonth++;
+                    if (currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+                    renderCalendar(currentMonth, currentYear);
+                });
+
+                renderCalendar(currentMonth, currentYear);
             }
-        };
 
-        // ==================== LOGOUT ====================
-        window.logout = logout;
+            // ==================== LOAD DATA CUTI (statistik) ====================
+            async function loadCuti() {
+                try {
+                    const response = await apiCall('/cuti', 'GET', null, token);
+                    const cutiList = response.data;
+                    const pending = cutiList.filter(c => c.status === 'pending').length;
+                    const approved = cutiList.filter(c => c.status === 'disetujui').length;
+                    const rejected = cutiList.filter(c => c.status === 'ditolak').length;
 
-        // ==================== LOAD DATA AWAL ====================
-        loadCuti();
+                    const pendingEl = document.getElementById('pendingCount');
+                    const approvedEl = document.getElementById('approvedCount');
+                    const rejectedEl = document.getElementById('rejectedCount');
+                    if (pendingEl) pendingEl.textContent = pending;
+                    if (approvedEl) approvedEl.textContent = approved;
+                    if (rejectedEl) rejectedEl.textContent = rejected;
+                } catch (error) {
+                    console.error('Gagal memuat statistik cuti:', error);
+                }
+            }
+
+            // ==================== LOAD RIWAYAT ====================
+            async function loadRiwayat() {
+                try {
+                    const response = await apiCall('/cuti', 'GET', null, token);
+                    const cutiList = response.data;
+                    const tbody = document.getElementById('cutiList');
+                    if (!tbody) return;
+
+                    tbody.innerHTML = '';
+
+                    cutiList.forEach((cuti, index) => {
+                        const row = tbody.insertRow();
+                        const baseStorageUrl = CONFIG.API_BASE_URL.replace('/api', '/storage');
+                        const tiketLink = cuti.tiket_path ? `<a href="${baseStorageUrl}/${cuti.tiket_path}" target="_blank" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-file-pdf"></i></a>` : '-';
+                        const tujuanDisplay = cuti.tujuan === 'kerabat' ? `Kerabat: ${cuti.nama_kerabat || '-'}<br>${cuti.nomor_kerabat || '-'}` : 'Orang Tua';
+                        const statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${cuti.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : cuti.status === 'disetujui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${cuti.status}</span>`;
+
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index+1}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900 max-w-xs">${formatAlamat(cuti.alamat_cuti)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${tujuanDisplay}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.transportasi || '-'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${tiketLink}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${statusBadge}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${cuti.approver ? cuti.approver.nama_lengkap : '-'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatDate(cuti.approved_at) || formatDate(cuti.created_at)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                ${cuti.status === 'pending' ? `<button onclick="deleteCuti(${cuti.id})" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>` : '-'}
+                            </td>
+                        `;
+                    });
+                } catch (error) {
+                    console.error('Gagal memuat riwayat:', error);
+                }
+            }
+
+            function formatAlamat(alamat) {
+                if (!alamat) return '-';
+                return `${alamat.jalan}, RT/RW ${alamat.rt_rw}, ${alamat.kelurahan}, ${alamat.kecamatan}, ${alamat.kota}, ${alamat.provinsi}`;
+            }
+
+            // ==================== FORM AJUKAN CUTI ====================
+            const tujuanRadios = document.querySelectorAll('input[name="tujuan"]');
+            const kerabatFields = document.getElementById('kerabatFields');
+            const transportasiSelect = document.getElementById('transportasi');
+            const uploadTiketField = document.getElementById('uploadTiketField');
+            const tiketInput = document.getElementById('tiket');
+            const cutiForm = document.getElementById('cutiForm');
+
+            if (tujuanRadios.length && kerabatFields) {
+                tujuanRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        if (this.value === 'kerabat') {
+                            kerabatFields.classList.remove('hidden');
+                            const namaKerabat = document.getElementById('nama_kerabat');
+                            const nomorKerabat = document.getElementById('nomor_kerabat');
+                            if (namaKerabat) namaKerabat.required = true;
+                            if (nomorKerabat) nomorKerabat.required = true;
+                        } else {
+                            kerabatFields.classList.add('hidden');
+                            const namaKerabat = document.getElementById('nama_kerabat');
+                            const nomorKerabat = document.getElementById('nomor_kerabat');
+                            if (namaKerabat) namaKerabat.required = false;
+                            if (nomorKerabat) nomorKerabat.required = false;
+                        }
+                    });
+                });
+            }
+
+            if (transportasiSelect && uploadTiketField && tiketInput) {
+                transportasiSelect.addEventListener('change', function() {
+                    const needTiket = ['kereta', 'pesawat', 'bus', 'travel'].includes(this.value);
+                    if (needTiket) {
+                        uploadTiketField.classList.remove('hidden');
+                        tiketInput.required = true;
+                    } else {
+                        uploadTiketField.classList.add('hidden');
+                        tiketInput.required = false;
+                    }
+                });
+            }
+
+            if (cutiForm) {
+                cutiForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    try {
+                        const submitBtn = this.querySelector('button[type="submit"]');
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+                        submitBtn.disabled = true;
+
+                        await apiCall('/cuti', 'POST', formData, token, true);
+                        alert('Pengajuan cuti berhasil!');
+                        this.reset();
+                        if (kerabatFields) kerabatFields.classList.add('hidden');
+                        if (uploadTiketField) uploadTiketField.classList.add('hidden');
+                        loadCuti(); // update statistik
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    } catch (error) {
+                        alert('Gagal: ' + error.message);
+                        const submitBtn = this.querySelector('button[type="submit"]');
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Ajukan Cuti';
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+
+            // ==================== DELETE CUTI ====================
+            window.deleteCuti = async function(id) {
+                if (!confirm('Yakin hapus?')) return;
+                try {
+                    await apiCall(`/cuti/${id}`, 'DELETE', null, token);
+                    loadRiwayat();
+                    loadCuti();
+                } catch (error) {
+                    alert('Gagal: ' + error.message);
+                }
+            };
+
+            // ==================== LOAD DATA AWAL ====================
+            loadCuti();
+
+            // ==================== LOGOUT ====================
+            window.logout = logout;
+        });
     </script>
 </body>
 </html>
