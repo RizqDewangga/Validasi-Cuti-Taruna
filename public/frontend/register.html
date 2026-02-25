@@ -323,7 +323,11 @@
                         <i class="fas fa-id-card input-icon"></i>
                         <input type="text" id="npm" class="input-field" placeholder="NPM" required>
                     </div>
-
+<!-- Nama Ibu -->
+                    <div class="input-group" data-aos="fade-up" data-aos-delay="400">
+                        <i class="fas fa-female input-icon"></i>
+                        <input type="text" id="prodi" class="input-field" placeholder="Program Studi" required>
+                    </div>
                     <!-- Nama Ibu -->
                     <div class="input-group" data-aos="fade-up" data-aos-delay="400">
                         <i class="fas fa-female input-icon"></i>
@@ -538,6 +542,7 @@
             const body = {
                 nama_lengkap: document.getElementById('nama_lengkap').value,
                 npm: document.getElementById('npm').value,
+                prodi: document.getElementById('prodi').value,
                 password: password,
                 nama_ibu: document.getElementById('nama_ibu').value,
                 tanggal_lahir: document.getElementById('tanggal_lahir').value

@@ -16,6 +16,7 @@ class AuthController extends Controller
         $request->validate([
             'nama_lengkap' => 'required|string|max:255',
             'npm' => 'required|string|unique:users',
+            'prodi' => 'nullable|string|max:255',
             'password' => 'required|string|min:6',
             'nama_ibu' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
@@ -24,6 +25,7 @@ class AuthController extends Controller
         $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
             'npm' => $request->npm,
+            'prodi' => $request->prodi,
             'password' => Hash::make($request->password),
             'role' => 'taruna',
             'nama_ibu' => $request->nama_ibu,
@@ -150,14 +152,14 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-    {
-        $request->user()->currentAccessToken()->delete();
+{
+    $request->user()->tokens()->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Logout berhasil'
-        ]);
-    }
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Logout berhasil dari semua device'
+    ]);
+}
 
     public function user(Request $request)
     {

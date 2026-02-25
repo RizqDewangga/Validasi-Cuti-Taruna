@@ -107,7 +107,7 @@
                     <!-- Header Hello -->
                     <div class="mb-8">
                         <h2 class="text-3xl font-bold text-gray-800">Hello, <span id="helloName">Taruna</span>!</h2>
-                        <p class="text-gray-600 text-lg mt-1">NPM: <span id="helloNpm">-</span></p>
+                        <p class="text-gray-600 text-lg mt-1">NPM: <span id="helloNpm">-</span> | Prodi: <span id="helloProdi">-</span></p>
                         <p class="text-gray-600" id="realTimeClock"></p>
                     </div>
 
@@ -323,6 +323,7 @@
             const userNameEl = document.getElementById('userName');
             const helloNameEl = document.getElementById('helloName');
             const helloNpmEl = document.getElementById('helloNpm');
+            document.getElementById('helloProdi').textContent = user.prodi || '-';
             if (userNameEl) userNameEl.textContent = user.nama_lengkap;
             if (helloNameEl) helloNameEl.textContent = user.nama_lengkap;
             if (helloNpmEl) helloNpmEl.textContent = user.npm || '-';

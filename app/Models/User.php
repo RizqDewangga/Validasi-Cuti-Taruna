@@ -18,6 +18,7 @@ class User extends Authenticatable
     protected $fillable = [
             'nama_lengkap',
     'npm',
+    'prodi',
     'password',
     'role',
     'nama_ibu',

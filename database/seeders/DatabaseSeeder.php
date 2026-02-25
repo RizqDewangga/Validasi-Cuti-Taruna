@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 User::create([
     'nama_lengkap' => 'Jihan Safirah',
     'npm' => '20032005',
+    'prodi' => 'S1 Teknik Industri',
     'password' => Hash::make('jihansafirah'),
     'role' => 'taruna',
     'nama_ibu' => 'mama jihan',
